@@ -1,0 +1,202 @@
+swagger: '2.0'
+info:
+  version: '0.1'
+  title: 'CMU MARS BRASS TA: Phase II, CP2'
+schemes:
+  - http
+host: brass-ta
+paths:
+  /perturbations:
+    get:
+      description: >-
+        Returns a list of possible perturbations of an (optionally) specified
+        shape and complexity that can be performed at a given line in the
+        program. This endpoint should be used to select a
+        suitable (set of) perturbation(s) for a test scenario.
+      parameters:
+        - in: body
+          required: true
+          name: perturbation-params
+          schema:
+            type: object
+            required:
+              - file
+              - shape
+            properties:
+              file:
+                type: string
+                description: >-
+                  The file at which the perturbation should be injected.
+              shape:
+                $ref: './cp2-definitions.yaml#/definitions/PerturbationKind'
+              line:
+                type: integer
+                description: >-
+                  The number of the line at which the perturbation should be
+                  injected.
+      responses:
+        '200':
+          description: OK.
+          schema:
+            type: object
+            properties:
+              perturbations:
+                type: array
+                items:
+                  $ref: './cp2-definitions.yaml#/definitions/Perturbation'
+                description: >-
+                  A list of perturbations that satisfy the query parameters
+                  provided by the request.
+        '400':
+          description: >-
+            Encountered an error while computing the list of possible
+            perturbations.
+          schema:
+            type: object
+            $ref: './cp2-definitions.yaml#/definitions/Error'
+
+  /lines:
+    get:
+      description: Returns a list of all the source lines at which
+        perturbations may be injected.
+      responses:
+        '200':
+          description: OK.
+          schema:
+            type: array
+            items:
+              $ref: './cp2-definitions.yaml#/definitions/SourceLine'
+            description: >-
+              A list of the mutable source lines within the project.
+
+  /files:
+    get:
+      description: Returns a list of all the source files that may be
+        subject to perturbation.
+      responses:
+        '200':
+          description: OK.
+          schema:
+            type: array
+            items:
+              type: string
+              example: foo.cpp
+            description: >-
+              A list of the mutable files.
+
+  /observe:
+    get:
+      description: >-
+        Returns the current status of the SUT.
+
+      responses:
+        '200':
+          description: OK.
+          schema:
+            type: object
+            required:
+              - stage
+            properties:
+              stage:
+                type: string
+                description: >-
+                  A concise description of the current state of the system.
+                enum:
+                  - READY_TO_PERTURB
+                  - PERTURBING
+                  - READY_TO_ADAPT
+                  - SEARCHING
+                  - FINISHED
+              resource-consumption:
+                type: object
+                description: >-
+                  A description of the resources that have been consumed in
+                  the process of searching for an adaptation.
+                required:
+                  - num-attempts
+                properties:
+                  num-attempts:
+                    type: integer
+                    minimum: 0
+                    description: Number of attempted adaptations.
+                  time-spent:
+                    type: number
+                    format: float
+                    minimum: 0.0
+                    description: Wall-clock time spent searching for an adaptation.
+              pareto-set:
+                type: array
+                items:
+                  $ref: './cp2-definitions.yaml#/definitions/CandidateAdaptation'
+                description: >-
+                  A list containing details of the sub-set of adaptations that
+                  have been encountered that belong to the
+                  pareto set (i.e., the set of non-dominated adaptations).
+
+  /perturb:
+    post:
+      description: >-
+        Applies a given perturbation to the SUT. The resulting perturbed system
+        will become Baseline B, provided that the system builds and fails at
+        least one test.
+      parameters:
+        - in: body
+          required: true
+          name: perturb-params
+          schema:
+            type: object
+            $ref: './cp2-definitions.yaml#/definitions/Perturbation'
+            description: The perturbation to apply to the SUT.
+      responses:
+        '204':
+          description: OK.
+        '400':
+          description: Failed to perturb the SUT.
+          schema:
+            type: object
+            $ref: './cp2-definitions.yaml#/definitions/Error'
+        '409':
+          description: >-
+            The SUT has already been perturbed.
+          schema:
+            type: object
+            $ref: './cp2-definitions.yaml#/definitions/Error'
+
+  /adapt:
+    post:
+      description: Triggers the code adaptation process.
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: Parameters
+          required: true
+          schema:
+            type: object
+            properties:
+              time-limit:
+                type: number
+                format: float
+                minimum: 1.0
+                description: >-
+                  An (optional) time limit for the adaptation process,
+                  specified in minutes.
+              attempt-limit:
+                type: integer
+                minimum: 1
+                description: >-
+                  An (optional) limit on the number of adaptations that may be
+                  attempted.
+      responses:
+        '204':
+          description: OK.
+        '400':
+          description: An error prevented code adaptation from being triggered.
+          schema:
+            type: object
+            $ref: './cp2-definitions.yaml#/definitions/Error'
+        '409':
+          description: System has not been (successfully) perturbed or adaptation has already been triggered.
+          schema:
+            type: object
+            $ref: './cp2-definitions.yaml#/definitions/Error'

@@ -1,0 +1,284 @@
+swagger: '2.0'
+info:
+  version: '0.1'
+  title: 'cmu mars brass th: phase 2, cp1'
+schemes:
+  - http
+host: brass-th
+paths:
+  /ready:
+    post:
+      description: >-
+        indicate to the TH that the TA is ready to recieve configuration data to
+        continue starting up the DAS
+      responses:
+        '200':
+          description: TH is ready to produce configuration data
+          schema:
+            type: object
+            required:
+              - level
+              - start-loc
+              - target-locs
+            properties:
+              level:
+                description: >-
+                  the level at which the DAS should operate for this test.
+                  as given in the CP definition,
+
+                    * a - no perturbations, no adaptation, no power model
+
+                    * b - perturbations, but no adaptation, no power model
+
+                    * c - perturbations and adaptation, with charge and
+                          discharge power models provided and learned
+                type: string
+                enum:
+                  - a
+                  - b
+                  - c
+              start-loc:
+                type: string
+                description: >-
+                  the name of the start map waypoint. start-loc must not be the
+                  same as the first item of `target-locs`.
+              target-locs:
+                type: array
+                items:
+                  type: string
+                description: >-
+                  the names of the waypoints to visit, in the order in which
+                  they must be visited. each name must be a valid name of a
+                  waypoint on the map. `target-locs` must not be the empty
+                  list.  every adjacent pair of elements of `target-locs` must
+                  be disequal -- that is to say, it is not permitted to direct
+                  the robot to travel to the waypoint where it is already
+                  located.
+              power-model:
+                type: integer
+                minimum: 0
+                maximum: 99
+                description: >-
+                  if in level c, the name of the power model from the test data
+                  to use for this test. each power model includes at least a
+                  function describing how the battery charges, discharges, and a
+                  maximum possible charge.
+              discharge-budget:
+                type: integer
+                minimum: 2
+                maximum: 1048576
+                description: >-
+                  if in level c, the maximum number of queries against the
+                  target function during learning
+        '400':
+          description: TH encountered an error producing configuration data
+  /error:
+    post:
+      description: >-
+        used by the TA to indicate to the TH that a non-recoverable error has
+        occurred and the test cannot proceed. the TH will terminate the test
+        upon notification of an error.
+      parameters:
+        - in: body
+          name: errorparams
+          required: true
+          schema:
+            type: object
+            required:
+              - error
+            properties:
+              error:
+                description: >-
+                  one of a enumerated set of reasons that errors may arise
+
+                   * parsing-error - one or more of the function
+                                     descriptions failed to parse
+
+                   * learning-error - an error was encountered in learning
+                                      one or more of the hidden functions
+
+                   * other-error - an error was encountered that is not
+                                   covered by the other error codees
+                type: string
+                enum:
+                  - parsing-error
+                  - learning-error
+                  - other-error
+              message:
+                description: 'human readable text describing the error, if available'
+                type: string
+      responses:
+        '200':
+          description: TH acknowledges the error and is shutting down the test
+  /status:
+    post:
+      description: used by the TA to periodically indicate its current state to the TH
+      parameters:
+        - in: body
+          name: statusparams
+          required: true
+          schema:
+            type: object
+            required:
+              - status
+              - sim-time
+              - x
+              - 'y'
+              - charge
+            properties:
+              status:
+                description: |-
+                  one of the possible status codes
+
+                   * learning-started - the learning phase has started
+
+                   * learning-done - the learning phase has been
+
+                   * adapt-started - the SUT has started adapting and
+                                     cannot be perturbed
+
+                   * adapt-done - the SUT has finished adapting
+
+                   * charging-started - the turtlebot is currently charging
+
+                   * charging-done - the turtlebot has stopped charging
+
+                   * at-waypoint - the turtlebot has arrived at one of the
+                     waypoints in the list received from /ready
+
+                   * live - the system is ready to recieve perturbs
+                type: string
+                enum:
+                  - learning-started
+                  - learning-done
+                  - adapt-started
+                  - adapt-done
+                  - charging-started
+                  - charging-done
+                  - at-waypoint
+                  - live
+              x:
+                description: current x-coordinate of the turtlebot
+                type: number
+                format: float
+              'y':
+                description: current y-coordinate of the turtlebot
+                type: number
+                format: float
+              charge:
+                description: >-
+                  current turtlebot battery charge in mWh. cannot be more than
+                  the maximum specified in the response from `/ready`.
+                type: integer
+                minimum: 0
+              sim-time:
+                description: >-
+                  the internal simulation time at the time that the status
+                  message was sent
+                type: integer
+                minimum: 0
+      responses:
+        '200':
+          description: TH acknowledges the status message
+        '400':
+          description: TH encountered an error with the status message
+  /done:
+    post:
+      description: >-
+        used by the TA to indicate to the TH that the test is over.
+
+        turtlebot has reached the goal and that the mission has been completed. 
+        note that incomplete missions will result in an error and not use this
+        end point.
+      parameters:
+        - in: body
+          name: doneparams
+          required: true
+          schema:
+            type: object
+            required:
+              - x
+              - 'y'
+              - charge
+              - sim-time
+              - outcome
+              - tasks-finished
+            properties:
+              x:
+                description: final x-coordinate of the turtlebot
+                type: number
+                format: float
+              'y':
+                description: final y-coordinate of the turtlebot
+                type: number
+                format: float
+              charge:
+                description: >-
+                  final charge measure of the turtlebot. cannot be more than the
+                  maximum specified in the response from `/ready`.
+                type: integer
+                minimum: 0
+              sim-time:
+                description: the final internal simulation time
+                type: integer
+                minimum: 0
+              tasks-finished:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    x:
+                      description: >-
+                        the x-coordinate of the robot when it reached this way
+                        point
+                      type: number
+                      format: float
+                    'y':
+                      description: >-
+                        the y-coordinate of the robot when it reached this way
+                        point
+                      type: number
+                      format: float
+                    sim-time:
+                      description: >-
+                        the simulation time when the robot reached this way
+                        point
+                      type: integer
+                    name:
+                      description: >-
+                        the name of the way point reached (TODO -- this will
+                        become an enum when we know all the names of the way
+                        points)
+                      type: string
+                description: >-
+                  the names of the waypoints that the turtlebot visited in the
+                  order that it visited them as well as the x,y coordinates of
+                  the robot and simulation time that it arrived there
+              outcome:
+                type: string
+                enum:
+                  - at-goal
+                  - out-of-battery
+                  - other-outcome
+                description: >-
+                  indicates the reason why the test is over
+
+                    * at-goal - the turtlebot has reached the goal and
+                                completed the mission objectives
+
+                    * out-of-battery - the battery on the turtlebot has run
+                                       out, and cannot be charged, so the
+                                       turtlebot cannot make progress
+
+                    * other-outcome - the test is over for any other
+                                      non-error reason
+              message:
+                type: string
+                description: >-
+                  human-readable text with more information about the end of the
+                  test.
+      responses:
+        '200':
+          description: TH acknowledges the completion of the mission
+        '400':
+          description: TH encountered an error at the completion of the mission
