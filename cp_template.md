@@ -6,7 +6,7 @@ Provide a short description of the challenge problem, which describe the challen
 
 The following questions should be thought about and addressed somewhere in this document.
 
-* Describe the mission scenario of where Autonomy (RASPBERRY-SI solution or any other solutions developed by the team involved in the ARROW/COLDTECH) and the System under Test (the OceanWATERS/OWLAT testbeds, we will call them SuT from now on).
+* Describe the mission scenario of where Autonomy (`RASPBERRY-SI` solution or any other solutions developed by the team involved in the `ARROW/COLDTECH` programs) and the `OceanWATERS/OWLAT testbeds` (we will call them and the System under Test--SuT--from now on).
 
 * Please provide more detail about the Autonomy.
 
