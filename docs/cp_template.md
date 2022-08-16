@@ -6,7 +6,7 @@ Provide a short description of the challenge problem, which describe the challen
 
 The following questions should be thought about and addressed somewhere in this document.
 
-* Describe the mission scenario of where Autonomy (`RASPBERRY-SI` solution or any other solutions developed by the team involved in the `ARROW/COLDTECH` programs) and the `OceanWATERS/OWLAT testbeds` (we will call them and the System under Test--SuT--from now on).
+* Describe the mission scenario of where Autonomy (`RASPBERRY-SI` solution or any other solutions developed by the team involved in the `ARROW/COLDTECH` programs) and the `OceanWATERS/OWLAT testbeds` (we will call them and the System Under Test--SUT--from now on).
 
 * Please provide more detail about the Autonomy.
 
@@ -33,7 +33,7 @@ Describe the different parameters (we called it knobs!) that will be explored in
 
 ## Test Procedure
 
-Describe how the Test Harness (We currently do this manually, but this can be partially or fully automated) will interact with the Challenge Problem (i.e., Autonomy) and SuT. It is expected that there will be more dynamic engagement at runtime between the test harness and SuT as the designs become more complex. This may include changes to the underlying ecosystem but also the ability of the test harness to monitor critical aspects of the system.
+Describe how the Test Harness (We currently do this manually, but this can be partially or fully automated) will interact with the Challenge Problem (i.e., Autonomy) and SUT. It is expected that there will be more dynamic engagement at runtime between the test harness and SuT as the designs become more complex. This may include changes to the underlying ecosystem but also the ability of the test harness to monitor critical aspects of the system.
 
 Explain if there is any deviation from the testing strategy (Baseline A, Baseline B, Challenge Stage). Describe what it means to test the challenge problem in each of those stages (i.e. Baseline A will choose settings for knobs A and C, B will always be set to its default value – Baseline B and the Challenge Stage use the same knob settings for A and C chosen in Baseline A. In addition, a new setting for knob B will be presented to Baseline B and Challenge Stage).
 
