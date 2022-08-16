@@ -318,5 +318,3 @@ For evaluation of Autonomy with the physical testbed, human must be in the loop 
 **Verdict Expression**
 
 > A procedure, expression, or program that maps the test result of one or more stages to a verdict for an intent element. While the test result describes what happened in a stage, the verdict expression assigns a meaning with respect to intent satisfaction. A verdict expression may involve a comparison with the test result from prior stages.
-
-
