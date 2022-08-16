@@ -84,7 +84,7 @@ ACTION_RESULT:
 
 An interaction diagram like the following would also be helpful in our discussions.
 
-![TH-to-TA interaction diagram](images/template-diagram.png)
+![TH-to-TA interaction diagram](figures/template-diagram.png)
 
 ## Intent Specification and Evaluation Metrics
 
