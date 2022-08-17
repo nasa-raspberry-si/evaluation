@@ -11,11 +11,14 @@ This document provides the test case specification for the JPL demo. Please refe
 	**Description:** No fault, no Autonomy
 
 	**Mission Specification**:
-		ARM_UNSTOW
+		
+		```ARM_UNSTOW
 		ARM_MOVE_CARTESIAN
 		ARM_MOVE_CARTESIAN_GUARDED
 		ARM_MOVE_CARTESIAN_GUARDED (retracting=True)
 		TASK_SCOOP
+		```
+
 
 	**Expected Behavior:** The arm should successfully reach the location defined in the mission specification.
 
@@ -25,11 +28,13 @@ This document provides the test case specification for the JPL demo. Please refe
 	**Description:** Fault, no Autonomy
 
 	**Mission Specification:**
-		ARM_UNSTOW
+		
+		```ARM_UNSTOW
 		ARM_MOVE_CARTESIAN
 		ARM_MOVE_CARTESIAN_GUARDED
 		ARM_MOVE_CARTESIAN_GUARDED (retracting=True)
 		TASK_SCOOP
+		```
 
 	**Fault:** A fault (ARM_GOAL_ERROR) is injected randomly while performing the mission through `axclient`.
 
@@ -41,11 +46,13 @@ This document provides the test case specification for the JPL demo. Please refe
 	**Description:** Fault, Autonomy, Planner Knows All Fixes for possible Faults
 	
 	**Mission Specification:**
-		ARM_UNSTOW
+		
+		```ARM_UNSTOW
 		ARM_MOVE_CARTESIAN
 		ARM_MOVE_CARTESIAN_GUARDED
-		ARM_MOVE_CARTESIAN_GUARDED (retracting=True)\
+		ARM_MOVE_CARTESIAN_GUARDED (retracting=True)
 		TASK_SCOOP
+		```
 	
 	**Fault:** A fault (ARM_GOAL_ERROR) is injected randomly while performing the mission through `axclient`.
 
@@ -56,11 +63,13 @@ This document provides the test case specification for the JPL demo. Please refe
 	**Description:** Fault, Autonomy, Planner Does not the fixes; Planner synthesize a new plan at runtime to fix the fault.
 	
 	**Mission Specification:**
-		ARM_UNSTOW
+		
+		```ARM_UNSTOW
 		ARM_MOVE_CARTESIAN
 		ARM_MOVE_CARTESIAN_GUARDED
 		ARM_MOVE_CARTESIAN_GUARDED (retracting=True)
 		TASK_SCOOP
+		```
 
 	**Fault:** A fault (ARM_GOAL_ERROR) is injected randomly while performing the mission through `axclient`.
 
@@ -71,11 +80,12 @@ This document provides the test case specification for the JPL demo. Please refe
  	**Description:** Behavioral Fault, Autonomy, Planner Does not the fixes; Planner synthesize a new plan at runtime to fix the fault
 	
 	**Mission Specification:**
-		ARM_UNSTOW
-		ARM_MOVE_CARTESIAN (intentionally setting a wrong z coordinate value that will trigger a fault, surface not reachable)
+		
+		```ARM_UNSTOW
+		ARM_MOVE_CARTESIAN // intentionally setting a wrong z coordinate value that will trigger a fault, surface not reachable
 		ARM_MOVE_CARTESIAN_GUARDED
 		ARM_MOVE_CARTESIAN_GUARDED (retracting=True)
-		TASK_SCOOP
+		TASK_SCOOP```
 
 	**Fault:** We inject a different fault class, which we call a behavioral fault. Intentionally injecting a behavioral fault, by setting a wrong `z` coordinate value as the goal for the `ARM_MOVE_CARTESIAN`. The action that will trigger a fault, is because the surface is not reachable by the ARM for scooping and this produce a behavioral fault, e.g., due to measurement noise, the goal target was determined incorrectly.
 	
