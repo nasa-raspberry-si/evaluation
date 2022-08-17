@@ -1,34 +1,34 @@
-`RASPBERRY-SI` Test and Evaluation Protocol
+# RASPBERRY-SI Test and Evaluation Protocol
 
 version: 1.0
 
 
-This document explains the test and evaluation protocol `RASPBERRY-SI` partially followed prior to and during visit to JPL in August 2022, and will fully follow post visit for evaluating the Autonomy when interfaced with NASA JPL OWLAT (physical testbed) and NASA Ames OceanWATERS (virtual testbed). The challenges that `RASPBERRY-SI` team faced for etesting and evaluating Autonomy with the physical testbed during the visit to JPL in August 2022 provided the required info for following a rigorious integration tests and defining test specification prior to evaluation.
+This document explains the test and evaluation protocol `RASPBERRY-SI` partially followed prior to and during the visit to JPL in August 2022, and will fully follow after the visit for evaluating the Autonomy when interfaced with NASA JPL OWLAT (physical testbed) and NASA Ames OceanWATERS (virtual testbed). The challenges that the `RASPBERRY-SI` team faced for testing and evaluating Autonomy with the physical testbed during the visit to JPL in August 2022 provided the required info for following rigorous integration tests and defining test specifications prior to evaluation.
 
 
-# Overview
+## Overview
 
-In the [RASPBERRY-SI](https://nasa-raspberry-si.github.io/raspberry-si/) project, we are developing `Autonomy` for `Ocean World Lander` (target system) with the following capabilities:
+[RASPBERRY-SI](https://nasa-raspberry-si.github.io/raspberry-si/) is a NASA-funded project to develop `Autonomy` for `Ocean World Lander` (target system) that provides the following capabilities:
 
- * Capability 1 (Root-cause Analysis): Analyzes and monitors the target system in operation to detect `root causes` of failures, faults, or any perturbations that affect the target system’s ability to realize its intent. 
+ * Capability 1 (Root-cause Analysis): Analyze and monitors the target system in operation to detect `root causes` of failures, faults, or any perturbations that affect the target system’s ability to realize its intent. 
  
- * Capability 2 (Runtime Adaptation): Adapts the target system to `maintain or recover` as much of its intent as possible. In particular, the Autonomy component enables adaptation to run-time/mission-time uncertainties. e.g., faults, failures, behavior execution error, degredations, or other unexpected behavior in the Europa lander arm or any other subsystem of the space lander.
+ * Capability 2 (Runtime Adaptation): Adapts the target system to `maintain or recover` as much of its intent as possible. In particular, the Autonomy component enables adaptation to run-time/mission-time uncertainties. e.g., faults, failures, behavior execution error, degradations, or other unexpected behavior in the Europa lander arm or any other subsystem of the space lander.
 
 
 
-# RASPBERRY-SI's Autonomy
+## RASPBERRY-SI's Autonomy
 
-In this section, we only describe the implementation view of the Autonomy component and we leave out the technical details of the methods implemented for each components.
+In this section, we only describe the implementation view of the Autonomy component and we leave out the technical details of the methods implemented for each component.
 
-The `RASPBERRY-SI Autonomy` implements a reference framework in autonomous and adaptive systems, called `MAPE-K`, originally developed by IBM and has been extedned by several members of `RASPBERRY-SI` team extensively over the past decade. The components of  our Autonomy includes: 
+The `RASPBERRY-SI-Autonomy` (`Autonomy` from hereafter) implements a reference framework in autonomous and adaptive systems, called `MAPE-K`, originally developed by IBM and has been extended by several members of `RASPBERRY-SI` team extensively over the past decade. The components of  our Autonomy include: 
 
-* `M: <autonomy-monitor>`: The monitoring component obtains the telemetry data and stores the data in `K: <autonomy-knowledge>` with appropriate format.
+* `M: <autonomy-monitor>`: The monitoring component obtains the telemetry data and stores the data in `K: <autonomy-knowledge`>` with the appropriate format.
 * `A: <autonomy-analyze>`: The analysis component detects any anomaly in the target system and perturbations in its environment that require adaptation to the target system. The analysis component does so using the live and historical monitoring data.
-* `P: <autonomy-plan>`: The planner component synthesises/generates plan to adapt the target system to maintain  or recover the specified intent.
-* `E: <autonomy-execute>`: The executor component translates the adaptation plans, specified in a domain-specific language (`RASPBERRY-SI Autonomy` uses [PRISM](http://www.prismmodelchecker.org/)--probabilistic model-checking toolchain for plan synthesis) to the target system's exeution language (`RASPBERRY-SI Autonomy` uses `PLEXIL` for executing all behaviors and adaptations required to be excuted on the target system).  
-* `K: <autonomy-knowledge>`: The knowledge components stores all data, including the telemetry data, configuration parameters, the specified intent, and all information that are required by the Autonomy components.
+* `P: <autonomy-plan>`: The planner component synthesizes/generates a plan to adapt the target system to maintain or recover the specified intent.
+* `E: <autonomy-execute>`: The executor component translates the adaptation plans, specified in a domain-specific language (`RASPBERRY-SI Autonomy` uses [PRISM](http://www.prismmodelchecker.org/)--probabilistic model-checking toolchain for plan synthesis) to the target system's execution language (`RASPBERRY-SI Autonomy` uses `PLEXIL` for executing all behaviors and adaptations required to be executed on the target system).  
+* `K: <autonomy-knowledge>`: The knowledge components stores all data, including the telemetry data, configuration parameters, the specified intent, and all information that is required by the Autonomy components.
 
-# Test Phases
+## Test Phases
 
 RASPBERRY-SI follows an iterative test, integration, and evaluation strategy to reduce the risks and increase the efficiency in test execution.
 
@@ -39,7 +39,7 @@ In this project, there are three major separate components:
     * OWLAT Control Software Simulation (`owlat-sim`): This software provides a partial simulation of the OWLAT hardware platform via Dynamics and Real-Time Simulation (DARTS). The simulation currently only includes limited aspects of the system. In particular, a subset of the robotic arm commands via ROS actions. 
   * [Ocean Worlds Autonomy Testbed for Exploration Research & Simulation (`OceanWATERS`)](https://github.com/nasa/ow_simulator) [3]: This software-based simulator emulates surface environmental conditions (e.g., lighting and surface material properties), robotic manipulator operation, and high-level lander systems. The simulator provides system introspection capabilities. 
 
-# Test Process
+## Test Process
 
 * Unit Testing: Testing individual components inside Autonomy. The usual unit tests for MAPE-K. 
 
@@ -49,14 +49,14 @@ In this project, there are three major separate components:
 
 We use the following tools/data: `rostest`, `unittest` (python), `gtest` (c++), `Logs`, `RQT`, `ROSBag`, `RViz`, `SymPy`
 
-# Unit Testing
+### Unit Testing
 
 * Unit testing of individual components inside Autonomy. The usual unit testing for MAPE-K. 
 
 * Fault Injection unit tests:
   * This stage tests the interfacing of Fault Injection with the testbeds.
 
-# Infrastructure Testing
+### Infrastructure Testing
 
 * Testing the connection between the Autonomy node and the testbed computer.  
 * Testing launch files: 
@@ -67,11 +67,11 @@ We use the following tools/data: `rostest`, `unittest` (python), `gtest` (c++), 
 
 We use `rostest` and embed tests within the roslaunch files to verify that they are functioning properly. In particular, we use <test> tags (specifies test nodes) within the launch file.
 
-# Integration Testing
+### Integration Testing
 
-The integration testing involves testing the integration of `Autonomy` and `OWLAT` (software-hardware interface) and `OceanWATERS` (software-software interface) testbeds. Testing complex distributed systems that involve hardware components requires many considerations as it involves several risk factors: (i) the safety of the robots and humans; (ii) it is a time-consuming task. To test Autonomy on the physical testbed,  physical setup that includes rebuilding every time that we run tests. For example, runninmg each test with the `OWLAT` testbed requires manual tasks, including putting the testbed in a ready/safe state. In addition, when a test involves executing behaviors during which the arm touches the ground, usch as scooping or digging, a human operating the physical testbed, requires to clean the robot arm (with a vacuum cleaner).
+The integration testing involves testing the integration of `Autonomy` and `OWLAT` (software-hardware interface) and `OceanWATERS` (software-software interface) testbeds. Testing complex distributed systems that involve hardware components requires many considerations as it involves several risk factors: (i) the safety of the robots and humans; (ii) it is a time-consuming task. To test Autonomy on the physical testbed, a physical setup that includes rebuilding every time that we run tests. For example, running each test with the `OWLAT` testbed requires manual tasks, including putting the testbed in a ready/safe state. In addition, when a test involves executing behaviors during which the arm touches the ground, such as scooping or digging, a human operating the physical testbed, requires cleaning the robot arm (with a vacuum cleaner).
 
-Before running the evaluation tests, the integration test stage is to demonstrate the Autonomy and Testbeds can interface and communicate with each other. The integration testing of the Autonomy and the testbeds involves: 
+Before running the evaluation tests, the integration test stage is to demonstrate that Autonomy and Testbeds can interface and communicate with each other. The integration testing of the Autonomy and the testbeds involves: 
 
 Autonomy and Testbeds should be interfaced via ROS:
   * Autonomy <-> <`ROS`: [node: `ow_exec`, actions: [`oceanwaters_msgs/ACTION_NAME_1`, ..., `oceanwaters_msgs/ACTION_NAME_N`], topic: [`oceanwaters_msgs/TOPIC_NAME_1`, ..., `oceanwaters_msgs/TOPIC_NAME_N`]> <-> Virtual Testbed (`OceanWATERS`)
@@ -79,17 +79,17 @@ Autonomy and Testbeds should be interfaced via ROS:
   * Autonomy <-> <`ROS`: [node: `owlat_exec`, actions: [`owlat_sim_msgs/ACTION_NAME_1`, ..., `owlat_sim_msgs/ACTION_NAME_N`], topic: [`owlat_sim_msgs/TOPIC_NAME_1`, ..., `owlat_sim_msgs/TOPIC_NAME_N`]> <-> Simulation Testbed (`owlat-sim`)
 
 
-The integration tests include testing two touch points between Autonomy and the Testbeds: (i) information flow from testbed to the autonomy via  via ROS topics provided in the API document; (ii) information flow and the flow of commands from Autonomy to the Testbed via ROS actions provided in the API document:
+The integration tests include testing two touch points between Autonomy and the Testbeds: (i) information flow from the testbed to the autonomy via ROS topics provided in the API document; (ii) information flow and the flow of commands from Autonomy to the Testbed via ROS actions provided in the API document:
 
   * Autonomy <- Testbed: `M: <autonomy-monitor>` <- `telemetry:` [`owlat_sim_msgs.TOPICs`, `owlat_msgs.TOPICs`, `oceanwaters_msgs.TOPICs`] <-> Testbed
   
   * Autonomy -> Testbed: `E: <autonomy-execute>` -> `ros_action:` [`owlat_exec owlat_sim_msgs/ACTIONs`, `owlat_exec owlat_msgs/ACTIONs`, `ow_exec oceanwaters_msgs/ACTIONs`] <-> Testbed
 
-Here, `ow_exec` and `owlat_exec` are ROS nodes that embodies `PLEXIL Executive` for executing `PLEXIL plans` as well as adapters, `ow-plexil-adapter` and `owlat-plexil-adapter`, for the virtual and physical testbeds respectively. 
+Here, `ow_exec` and `owlat_exec` are ROS nodes that embody `PLEXIL Executive` for executing `PLEXIL plans` as well as adapters, `ow-plexil-adapter` and `owlat-plexil-adapter`, for the virtual and physical testbeds respectively. 
 
 
 
-# Functional Testing
+### Functional Testing
 
 The functional testing is involved exercising the execution of all provided testbed behaviors through the end-to-end execution pipelines: 
 * Functional testing on virtual testbed: `plexil-plan` <-> `plexil-executive` <-> `ow-plexil-adapter` <-> `ros-action-server` <-> `OceanWATERS`
@@ -104,7 +104,7 @@ In the functional testing, we test different types of behaviors provided by the 
 The testbed provides the API via the testbed's user guide.
 
 
-# Autonomy Evaluation Protocol
+## Autonomy Evaluation
 
 We evaluate the performance of Autonomy in maintaining the intents by running test cases, specified with the following structure:
 
@@ -115,6 +115,21 @@ We evaluate the performance of Autonomy in maintaining the intents by running te
     - `intent-element-2`: A `description` in English and a `formula` that determines the extent to which the target system is successfully maintaining intent as defined in the description of `intent-element-2` (`intent-element-2-sympy-formula.txt`). 
     - `intent-element-3`: A `description` in English and a `formula` that determines the extent to which the target system is successfully maintaining intent as defined in the description of `intent-element-1` (`intent-element-3-sympy-formula.txt`). 
 - Test configuration: `test-config`:[`any-other-test-level-configuration-options`]: Any information that may be require to run the test. For example, the time and the frequency of the faults injected to the target system. 
+
+**Example: Intent Element 1. Accuracy**
+
+*Description*: Lander arm successfully navigates to a target location (specified in the mission specification) with an appropriate pose for sample collection.
+
+*Verdict Expression*: Using the `final_pose` data reported via `geometry msgs/Pose` to calculate the euclidean distance d from the target pose location specified in the mission specification.
+
+d_pose = \sqrt { ( {x_{final_pose}-x_{target_pose}} )^2 + ( {y_{final_pose}-y_{target_pose}} )^2 + ( {z_{final_pose}-z_{target_pose}} )^2}  
+
+*Verdict Expression*: Using the `final_quat` data reported via `geometry msgs/Pose` to calculate the euclidean distance d from the target target_quat location for sample collection at a sample collection point.
+
+d_quat = \angular-dist(final_quat, target_quat)
+
+*Verdict Evaluation*: PASS if d_pose < 2 cm and d_quat < \theta_good , DEGRADED if d_pose < 10 cm and d_quat < \theta_deg, otherwise FAIL.
+
 
 We will use the evaluation criteria provided by NASA [1] to formulate the intent expression in terms of symbolic formula.
 
@@ -142,18 +157,17 @@ The information stored in the test case execution files are used by evaluation s
   * `score:` the human evaluator runs scripts to calculate `verdict-expression` over `trials`.
 
 
-* `owlat-sim`: similar to `OceanWATERS`
-
-* `owlat-physical`: evaluation are done primarily manually with human deriving the test execution. The evaluation procedure includes: 
+* `owlat-sim`: similar to `OceanWATERS``owlat-physical`: evaluations are done primarily manually with humans deriving the test execution. The evaluation procedure includes: 
   * `instantiation of the experimental environment:` The Autonomy and the Physical Testbed are instantiated and deployed in their deployment nodes. 
   * `perturbations:` The fault injection component is instantiated and faults are injected with a manual or automated procedure using configuration files and scripts. 
   * `score:` the human evaluator runs scripts to calculate `verdict-expression` over `trials`.
+
 
 # Test Execution 
 
 We perform the following steps for each test case execution:
 
-* Pre test execution: We instantiate the executors required for running the test and use `PLEXIL` to initialise the test infrustructure including the testbed, autonomy, fault injection, and other test related nodes.
+* Pre test execution: We instantiate the executors required for running the test and use `PLEXIL` to initialize the test infrastructure including the testbed, autonomy, fault injection, and other test-related nodes.
 
 * During test execution: We execute a test and collect data via `PLEXIL` that interact with the target system to collect telemetry data for test evaluation. `telemetry:` [`owlat_sim_msgs.TOPICs`, `owlat_msgs.TOPICs`, `oceanwaters_msgs.TOPICs`]
 
@@ -194,7 +208,7 @@ The final stage represents an adaptive target system operating in a perturbed ec
 * Stage C.C (Challenge Stage - Causality + Runtime): synthesized adaptation plan by querying the causal model
 start a PLEXIL plan, randomly inject the fault, the autonomy detects the fault, the prism synthesizes an optimal plan at runtime with respect to objectives of the mission (energy consumption, time)  that is going to fix the fault, translate the prism plan to PLEXIL plan and execute the PLEXIL plan
 
-*It is expected that the intended functionality or a degraded functionality is preserved. The efficiency of planning at these different stages are different. For the same fault, the time that it takes to generate a plan is expected to _be ordered as `C.A < C.C < C.b`.*
+*It is expected that the intended functionality or a degraded functionality is preserved. The efficiency of planning at these different stages is different. For the same fault, the time that it takes to generate a plan is expected to _be ordered as `C.A < C.C < C.b`.*
 
 
 # Verdict and Test Outcome
@@ -269,12 +283,12 @@ If any stage of a test yields an error condition, the test outcome is `ERROR`. A
 
 [1] Mike Dalal, Hari Nayar, 'Evaluation Criteria for Ocean World Lander Autonomy,' (Oct 11, 2021).
 
-
 [2] NASA JPL, Ocean World Lander Autonomy Testbed (OWLAT), 
 [URL](https://www-robotics.jpl.nasa.gov/how-we-do-it/systems/ocean-world-lander-autonomy-testbed-owlat/) 
 
 [3] NASA Ames, Ocean Worlds Autonomy Testbed for Exploration Research & Simulation (OceanWATERS), [URL](https://github.com/nasa/ow_simulator). 
 
+[4] [RASPBERRY-SI project website](https://nasa-raspberry-si.github.io/raspberry-si/)
 
 # Appendix 1: Terminology
 
@@ -311,7 +325,7 @@ This deserves to be stated since many tests of fidelity will actually interact w
 
 > A Test Case is a parameterized specification for an experiment in which test inputs are provided to the Autonomy, the target system, and/or fault injection, and the responses observed and measured. 
 
-This includes the mission specification, test configuration, including the frequency, type, and time info for the automated fault injection. 
+This includes the mission specification, and test configuration, including the frequency, type, and time info for the automated fault injection. 
 
 **Test Harness**
 
