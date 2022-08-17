@@ -1,6 +1,6 @@
 # Example Challenge Problem Description
 
-The document defines an example challenge problem description, following the structure of the [challenge problem template](./cp_template.md).
+The document section defines an example challenge problem description, following the structure of the challenge problem template, which is used to illustrate application of the evaluation criteria.
 
 
 ## Overview

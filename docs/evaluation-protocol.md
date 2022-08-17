@@ -1,3 +1,11 @@
+`RASPBERRY-SI` Test and Evaluation Protocol
+
+version: 1.0
+
+
+This document explains the test and evaluation protocol `RASPBERRY-SI` partially followed prior to and during visit to JPL in August 2022, and will fully follow post visit for evaluating the Autonomy when interfaced with NASA JPL OWLAT (physical testbed) and NASA Ames OceanWATERS (virtual testbed). The challenges that `RASPBERRY-SI` team faced for etesting and evaluating Autonomy with the physical testbed during the visit to JPL in August 2022 provided the required info for following a rigorious integration tests and defining test specification prior to evaluation.
+
+
 # Overview
 
 In the [RASPBERRY-SI](https://nasa-raspberry-si.github.io/raspberry-si/) project, we are developing `Autonomy` for `Ocean World Lander` (target system) with the following capabilities:
@@ -7,11 +15,6 @@ In the [RASPBERRY-SI](https://nasa-raspberry-si.github.io/raspberry-si/) project
  * Capability 2 (Runtime Adaptation): Adapts the target system to `maintain or recover` as much of its intent as possible. In particular, the Autonomy component enables adaptation to run-time/mission-time uncertainties. e.g., faults, failures, behavior execution error, degredations, or other unexpected behavior in the Europa lander arm or any other subsystem of the space lander.
 
 
-This document explains the evaluation protocol the RASPBERRY-SI team follows for evaluating the Autonomy when interfaced with NASA JPL OWLAT (physical testbed) and NASA Ames OceanWATERS (virtual testbed). We will use the evaluation criteria provided to us in `Evaluation Criteria for Ocean World Lander Autonomy` document `v1.0`. This evaluation protocol document explains the process for test design, and test execution while the evaluation criteria document provides measures related to each of these areas, specifically in the `intent-formula` in the intent specification. 
-
-In order to achieve this, we defined several challenge problems based on the [Challenge Problem Template](cp_template.md). Each challenge problem description provides the context necessary to evaluate Autonomy in interesting scenarios.
-
-This document defines a general methodology for evaluating each challenge problem. The document is structured as follows. This is followed by a discussion of the test design, test execution timeline, and test scoring. Finally, definitions of terms used throughout this document are provided.
 
 # RASPBERRY-SI's Autonomy
 
@@ -32,10 +35,9 @@ RASPBERRY-SI follows an iterative test, integration, and evaluation strategy to 
 In this project, there are three major separate components:
 * Testbeds: 
   * [Ocean World Lander Autonomy Testbed (OWLAT)](https://www-robotics.jpl.nasa.gov/how-we-do-it/systems/ocean-world-lander-autonomy-testbed-owlat/):  
-    * OWLAT Hardware Platform (`owlat-physical`): The testbed comprises a base, an instrument arm, and perception sensors typically found on lander missions. It provides the hardware interfaces and low-level software infrastructure to allow various autonomy solutions to command typical lander operations and receive telemetry and performance feedback through a ROS-based software interface in a plug-and-play manner. 
-    * OWLAT Control Software Simulation (`owlat-sim`): This software provides a partial simulation of the OWLAT hardware platform via Dynamics and Real-Time Simulation (DARTS). The simulation currently only includes limited aspects of the system. In particular, a subset of the robotic arm via
-a subset of the ROS autonomy command interface. 
-  * [Ocean Worlds Autonomy Testbed for Exploration Research & Simulation (`OceanWATERS`)](https://github.com/nasa/ow_simulator): This software-based simulator emulates surface environmental conditions (e.g., lighting and surface material properties), robotic manipulator operation, and high-level lander systems. The simulator provides system introspection capabilities. 
+    * OWLAT Hardware Platform (`owlat-physical`): The testbed comprises a base, an instrument arm, and perception sensors (camera). It provides the hardware interfaces and low-level software infrastructure to allow various autonomy solutions to command typical lander operations and receive telemetry and performance feedback through a ROS-based software interface in a plug-and-play manner [2]. 
+    * OWLAT Control Software Simulation (`owlat-sim`): This software provides a partial simulation of the OWLAT hardware platform via Dynamics and Real-Time Simulation (DARTS). The simulation currently only includes limited aspects of the system. In particular, a subset of the robotic arm commands via ROS actions. 
+  * [Ocean Worlds Autonomy Testbed for Exploration Research & Simulation (`OceanWATERS`)](https://github.com/nasa/ow_simulator) [3]: This software-based simulator emulates surface environmental conditions (e.g., lighting and surface material properties), robotic manipulator operation, and high-level lander systems. The simulator provides system introspection capabilities. 
 
 # Test Process
 
@@ -113,6 +115,8 @@ We evaluate the performance of Autonomy in maintaining the intents by running te
     - `intent-element-2`: A `description` in English and a `formula` that determines the extent to which the target system is successfully maintaining intent as defined in the description of `intent-element-2` (`intent-element-2-sympy-formula.txt`). 
     - `intent-element-3`: A `description` in English and a `formula` that determines the extent to which the target system is successfully maintaining intent as defined in the description of `intent-element-1` (`intent-element-3-sympy-formula.txt`). 
 - Test configuration: `test-config`:[`any-other-test-level-configuration-options`]: Any information that may be require to run the test. For example, the time and the frequency of the faults injected to the target system. 
+
+We will use the evaluation criteria provided by NASA [1] to formulate the intent expression in terms of symbolic formula.
 
 We collect the information about test case execution with the following format.
 
@@ -260,7 +264,19 @@ Some conditions occurred during test execution that precluded continuation of th
 If any stage of a test yields an error condition, the test outcome is `ERROR`. All test results for other stages will be ignored.
 
 
-# Evaluation Terminology
+
+# References
+
+[1] Mike Dalal, Hari Nayar, 'Evaluation Criteria for Ocean World Lander Autonomy,' (Oct 11, 2021).
+
+
+[2] NASA JPL, Ocean World Lander Autonomy Testbed (OWLAT), 
+[URL](https://www-robotics.jpl.nasa.gov/how-we-do-it/systems/ocean-world-lander-autonomy-testbed-owlat/) 
+
+[3] NASA Ames, Ocean Worlds Autonomy Testbed for Exploration Research & Simulation (OceanWATERS), [URL](https://github.com/nasa/ow_simulator). 
+
+
+# Appendix 1: Terminology
 
 **Challenge Problem (CP)**
 
