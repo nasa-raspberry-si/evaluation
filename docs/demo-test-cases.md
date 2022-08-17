@@ -93,3 +93,31 @@ This document provides the test case specification for the JPL demo. Please refe
 	till it finds the correct "z" value or "force_threshold"
 
 	**New Plan (generated at runtime):** the new plan contains the correction of input by adjusting the z values in the coordinate that will be sent to the arm for finding the right `Pose` and `force_threshold` for sample collection. In particular, `ARM_MOVE_CARTESIAN` will be called with the correct inputs for the `z`  value in `pose` coordinate and `ARM_MOVE_CARTESIAN_GUARDED` with a correct input `force_threshold`.
+
+* Intent Specification:
+
+**Intent Element 1. Location Accuracy**
+
+*Description*: Lander arm successfully navigates to a target location (specified in the mission specification) with an appropriate pose for sample collection.
+
+*Verdict Expression*: Using the `final_pose` data reported via `geometry msgs/Pose` to calculate the euclidean distance d from the target pose location specified in the mission specification.
+
+```
+d_pose = \sqrt { ( {x_{final_pose}-x_{target_pose}} )^2 + ( {y_{final_pose}-y_{target_pose}})^2 + ( {z_{final_pose}-z_{target_pose}} )^2} 
+``` 
+
+**Intent Element 2. Pose Accuracy**
+
+*Verdict Expression*: Using the `final_quat` data reported via `geometry msgs/Pose` to calculate the euclidean distance d from the target target_quat location for sample collection at a sample collection point.
+
+`d_quat = \angular-dist(final_quat, target_quat)`
+
+*Verdict Evaluation*: PASS if d_pose < 2 cm and d_quat < \theta_good , DEGRADED if d_pose < 10 cm and d_quat < \theta_deg, otherwise FAIL.
+
+**Intent Element 3. Force Accuracy**
+
+*Verdict Expression*: Using the `max_force` data reported via `TASK_PSP` to calculate the difference between force generated for excavating a particular location compared with the optimal threshold calculated based on math and the arm dynamics and physics.
+
+`d_force = (force_generated - force_optimal) / force_optimal`
+
+*Verdict Evaluation*: `PASS` if `d_force < 0.2`, `DEGRADED` if `0.8 > d_force >= 0.2`, otherwise `FAIL`.
