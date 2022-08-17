@@ -7,7 +7,7 @@ In the [RASPBERRY-SI](https://nasa-raspberry-si.github.io/raspberry-si/) project
  * Capability 2 (Runtime Adaptation): Adapts the target system to `maintain or recover` as much of its intent as possible. In particular, the Autonomy component enables adaptation to run-time/mission-time uncertainties. e.g., faults, failures, behavior execution error, degredations, or other unexpected behavior in the Europa lander arm or any other subsystem of the space lander.
 
 
-This document explains the evaluation protocol the RASPBERRY-SI team follows for evaluating the Autonomy when interfaced with NASA JPL OWLAT (physical testbed) and NASA Ames OceanWATERS (virtual testbed). We will use the evaluation criteria provided to us in `Evaluation Criteria for Ocean World Lander Autonomy` document `v1.0`. This evaluation protocol document explains the process for test design, and test execution while the evaluation criteria document provides measures related to each of these areas. 
+This document explains the evaluation protocol the RASPBERRY-SI team follows for evaluating the Autonomy when interfaced with NASA JPL OWLAT (physical testbed) and NASA Ames OceanWATERS (virtual testbed). We will use the evaluation criteria provided to us in `Evaluation Criteria for Ocean World Lander Autonomy` document `v1.0`. This evaluation protocol document explains the process for test design, and test execution while the evaluation criteria document provides measures related to each of these areas, specifically in the `intent-formula` in the intent specification. 
 
 In order to achieve this, we defined several challenge problems based on the [Challenge Problem Template](cp_template.md). Each challenge problem description provides the context necessary to evaluate Autonomy in interesting scenarios.
 
@@ -45,7 +45,7 @@ a subset of the ROS autonomy command interface.
 
 * Test Execution: Evaluating the performance of Autonomy
 
-We use the following tools/data: `rostest`, `unittest` (python), `gtest` (c++), `Logs`, `RQT`, `ROSBag`, `RViz`
+We use the following tools/data: `rostest`, `unittest` (python), `gtest` (c++), `Logs`, `RQT`, `ROSBag`, `RViz`, `SymPy`
 
 # Unit Testing
 
@@ -71,17 +71,19 @@ The integration testing involves testing the integration of `Autonomy` and `OWLA
 
 Before running the evaluation tests, the integration test stage is to demonstrate the Autonomy and Testbeds can interface and communicate with each other. The integration testing of the Autonomy and the testbeds involves: 
 
-* Autonomy and Testbeds integration tests:
-  * Autonomy <-> `ow_exec` <-> Virtual Testbed (`OceanWATERS`)
-  * Autonomy <-> `owlat_exec` <-> Physical Testbed (`owlat-physical`)
-  * Autonomy <-> `owlat_exec` <-> Simulation Testbed (`owlat-sim`)
+Autonomy and Testbeds should be interfaced via ROS:
+  * Autonomy <-> <`ROS`: [node: `ow_exec`, actions: [`oceanwaters_msgs/ACTION_NAME_1`, ..., `oceanwaters_msgs/ACTION_NAME_N`], topic: [`oceanwaters_msgs/TOPIC_NAME_1`, ..., `oceanwaters_msgs/TOPIC_NAME_N`]> <-> Virtual Testbed (`OceanWATERS`)
+  * Autonomy <-> <`ROS`: [node: `owlat_exec`, actions: [`owlat_msgs/ACTION_NAME_1`, ..., `owlat_msgs/ACTION_NAME_N`], topic: [`owlat_msgs/TOPIC_NAME_1`, ..., `owlat_msgs/TOPIC_NAME_N`]> <-> Physical Testbed (`owlat-physical`)
+  * Autonomy <-> <`ROS`: [node: `owlat_exec`, actions: [`owlat_sim_msgs/ACTION_NAME_1`, ..., `owlat_sim_msgs/ACTION_NAME_N`], topic: [`owlat_sim_msgs/TOPIC_NAME_1`, ..., `owlat_sim_msgs/TOPIC_NAME_N`]> <-> Simulation Testbed (`owlat-sim`)
 
 
-integration tests:
-  * `M: <autonomy-monitor>` <- `owlat-telemetry` (via ROS topics)
-  * `E: <autonomy-execute>` -> `ow_exec` and `owlat_exec` 
+The integration tests include testing two touch points between Autonomy and the Testbeds: (i) information flow from testbed to the autonomy via  via ROS topics provided in the API document; (ii) information flow and the flow of commands from Autonomy to the Testbed via ROS actions provided in the API document:
 
-Here, `ow_exec` and `owlat_exec` are ROS nodes that embodies `PLEXIL Executive` for executing `PLEXIL plans` as well as adapters, `ow-plexil-adapter` and `owlat-plexil-adapter`, for the virtual and physical testbeds  respectively.
+  * Autonomy <- Testbed: `M: <autonomy-monitor>` <- `telemetry:` [`owlat_sim_msgs.TOPICs`, `owlat_msgs.TOPICs`, `oceanwaters_msgs.TOPICs`] <-> Testbed
+  
+  * Autonomy -> Testbed: `E: <autonomy-execute>` -> `ros_action:` [`owlat_exec owlat_sim_msgs/ACTIONs`, `owlat_exec owlat_msgs/ACTIONs`, `ow_exec oceanwaters_msgs/ACTIONs`] <-> Testbed
+
+Here, `ow_exec` and `owlat_exec` are ROS nodes that embodies `PLEXIL Executive` for executing `PLEXIL plans` as well as adapters, `ow-plexil-adapter` and `owlat-plexil-adapter`, for the virtual and physical testbeds respectively. 
 
 
 
@@ -106,11 +108,11 @@ We evaluate the performance of Autonomy in maintaining the intents by running te
 
 - Test Case #1: A name or sentence in English
 - A `mission-specification` (`mission-spec.PLEXIL`)
-- Intent Elements:
-    - `intent-element-1`: A `intent-description` in English about the expected behavior from the target system and a `intent-formula` that determines the extent to which the target system maintained the expected behavior, by precisely measuring `deviations from the specified intent` (`intent-element-1.PLEXIL`). 
-    - `intent-element-2`: A `description` in English and a `formula` that determines the extent to which the target system is successfully maintaining intent as defined in the description of `intent-element-2` (`intent-element-1.PLEXIL`). 
-    - `intent-element-3`: A `description` in English and a `formula` that determines the extent to which the target system is successfully maintaining intent as defined in the description of `intent-element-1` (`intent-element-3.PLEXIL`). 
-- A `fault-injection-configuration`: Any information that `Fault Injection` component may require to execute a test case. For example, the time and the frequency of the faults injected to the target system. 
+- Intent elements:
+    - `intent-element-1`: A `intent-description` in English about the expected behavior from the target system and a `intent-formula` that determines the extent to which the target system maintained the expected behavior, by precisely measuring `deviations from the specified intent` (`intent-element-1-sympy-formula.txt`). 
+    - `intent-element-2`: A `description` in English and a `formula` that determines the extent to which the target system is successfully maintaining intent as defined in the description of `intent-element-2` (`intent-element-2-sympy-formula.txt`). 
+    - `intent-element-3`: A `description` in English and a `formula` that determines the extent to which the target system is successfully maintaining intent as defined in the description of `intent-element-1` (`intent-element-3-sympy-formula.txt`). 
+- Test configuration: `test-config`:[`any-other-test-level-configuration-options`]: Any information that may be require to run the test. For example, the time and the frequency of the faults injected to the target system. 
 
 We collect the information about test case execution with the following format.
 
@@ -122,11 +124,11 @@ We collect the information about test case execution with the following format.
   - `fault-injection-configuration-id:`
   - `experiment-data:`
     - `ros-bag-id`
-    - `any-other-raw-data`
+    - `any-other-raw-data-collected-at-test-execution-time`
   - `results:`
-    - `intent-element-1 = <float> [0 - 1]`
-    - `intent-element-2 = <float> [0 - 1]`
-    - `any-other-postprocessed-data-item-related-to-performance-of-the-target-system-during-the-runtime-execution:`
+    - `intent-element-1: <float> [0 - 1]`
+    - `intent-element-2: <float> [0 - 1]`
+    - `any-other-postprocessed-data-item-related-to-performance-of-the-autonomy-during-the-runtime-execution:`
 
 The information stored in the test case execution files are used by evaluation scripts to determine the outcome of evaluation. In particular, we use the following evaluation procedure for each testbed:
 
@@ -143,8 +145,17 @@ The information stored in the test case execution files are used by evaluation s
   * `perturbations:` The fault injection component is instantiated and faults are injected with a manual or automated procedure using configuration files and scripts. 
   * `score:` the human evaluator runs scripts to calculate `verdict-expression` over `trials`.
 
+# Test Execution 
 
-# Test Execution
+We perform the following steps for each test case execution:
+
+* Pre test execution: We instantiate the executors required for running the test and use `PLEXIL` to initialise the test infrustructure including the testbed, autonomy, fault injection, and other test related nodes.
+
+* During test execution: We execute a test and collect data via `PLEXIL` that interact with the target system to collect telemetry data for test evaluation. `telemetry:` [`owlat_sim_msgs.TOPICs`, `owlat_msgs.TOPICs`, `oceanwaters_msgs.TOPICs`]
+
+* Post test execution: We use `SymPy` for evaluating symbolic formulas (`intent-formula`, `verdict-expression`). 
+
+# Test Stages
 
 The high-level timeline consists of sequential stages of tests. A testing stage is an execution of the test using either the unadaptive or adaptive version of the target system running in the context of either the unperturbed (original) or a perturbed ecosystem.
 
