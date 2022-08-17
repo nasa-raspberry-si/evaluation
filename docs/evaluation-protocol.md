@@ -111,10 +111,10 @@ We evaluate the performance of Autonomy in maintaining the intents by running te
 - Test Case #1: A name or sentence in English
 - A `mission-specification` (`mission-spec.PLEXIL`)
 - Intent elements:
-    - `intent-element-1`: A `intent-description` in English about the expected behavior from the target system and a `intent-formula` that determines the extent to which the target system maintained the expected behavior, by precisely measuring `deviations from the specified intent` (`intent-element-1-sympy-formula.txt`). 
+    - `intent-element-1`: A `intent-description` in English about the expected behavior from the target system and an `intent-formula` that determines the extent to which the target system maintained the expected behavior, by precisely measuring `deviations from the specified intent` (`intent-element-1-sympy-formula.txt`). 
     - `intent-element-2`: A `description` in English and a `formula` that determines the extent to which the target system is successfully maintaining intent as defined in the description of `intent-element-2` (`intent-element-2-sympy-formula.txt`). 
     - `intent-element-3`: A `description` in English and a `formula` that determines the extent to which the target system is successfully maintaining intent as defined in the description of `intent-element-1` (`intent-element-3-sympy-formula.txt`). 
-- Test configuration: `test-config`:[`any-other-test-level-configuration-options`]: Any information that may be require to run the test. For example, the time and the frequency of the faults injected to the target system. 
+- Test configuration: `test-config`:[`any-other-test-level-configuration-options`]: Any information that may be required to run the test. For example, the time and the frequency of the faults injected into the target system. 
 
 **Example: Intent Element 1. Accuracy**
 
@@ -154,7 +154,7 @@ The information stored in the test case execution files are used by evaluation s
 * `OceanWATERS`: evaluation are done by an automated procedure: 
   * `instantiation of the experimental environment:` The Autonomy and a simulator are automatically instantiated and deployed in their deployment nodes. 
   * `perturbations:` The fault injection component is instantiated and faults are injected using an automated procedure using configuration files and scripts. 
-  * `score:` the human evaluator runs scripts to calculate `verdict-expression` over `trials`.
+  * `score:` the human evaluator runs scripts to calculate `verdict-expression` over the `trials`.
 
 
 * `owlat-sim`: similar to `OceanWATERS``owlat-physical`: evaluations are done primarily manually with humans deriving the test execution. The evaluation procedure includes: 
@@ -167,11 +167,11 @@ The information stored in the test case execution files are used by evaluation s
 
 We perform the following steps for each test case execution:
 
-* Pre test execution: We instantiate the executors required for running the test and use `PLEXIL` to initialize the test infrastructure including the testbed, autonomy, fault injection, and other test-related nodes.
+* Pre-test execution: We instantiate the executors required for running the test and use `PLEXIL` to initialize the test infrastructure including the testbed, autonomy, fault injection, and other test-related nodes.
 
-* During test execution: We execute a test and collect data via `PLEXIL` that interact with the target system to collect telemetry data for test evaluation. `telemetry:` [`owlat_sim_msgs.TOPICs`, `owlat_msgs.TOPICs`, `oceanwaters_msgs.TOPICs`]
+* During test execution: We execute a test and collect data via `PLEXIL` that interacts with the target system to collect telemetry data for test evaluation. `telemetry:` [`owlat_sim_msgs.TOPICs`, `owlat_msgs.TOPICs`, `oceanwaters_msgs.TOPICs`]
 
-* Post test execution: We use `SymPy` for evaluating symbolic formulas (`intent-formula`, `verdict-expression`). 
+* Post-test execution: We use `SymPy` for evaluating symbolic formulas (`intent-formula`, `verdict-expression`). 
 
 # Test Stages
 
@@ -277,7 +277,7 @@ Some conditions occurred during test execution that precluded continuation of th
 
 If any stage of a test yields an error condition, the test outcome is `ERROR`. All test results for other stages will be ignored.
 
-
+For more specific examples, please refer to the [demo test cases](./demo-test-cases.md) that involve test specifications for each test stage.
 
 # References
 
