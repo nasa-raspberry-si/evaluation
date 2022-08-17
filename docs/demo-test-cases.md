@@ -21,6 +21,7 @@ This document provides the test case specification for the JPL demo. Please refe
 
 
 2. **Baseline B**
+	
 	**Description:** Fault, no Autonomy
 
 	**Mission Specification:**
