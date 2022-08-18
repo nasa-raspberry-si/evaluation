@@ -1,4 +1,4 @@
-# Demo Scenarios
+# Demo Scenarios for Autonomy
 
 This document provides the test case specification for the JPL demo. Please refer to the [test and evaluation protocol](./evaluation-protocol.md) for more explanation about the test stages and the template for test case specification.
 
@@ -10,7 +10,7 @@ This document provides the test case specification for the JPL demo. Please refe
 
 	**Description:** No fault, no Autonomy
 
-	**Mission Specification**:
+	**Mission Specification:**
 		
 		```ARM_UNSTOW
 		ARM_MOVE_CARTESIAN
@@ -102,22 +102,22 @@ This document provides the test case specification for the JPL demo. Please refe
 
 *Verdict Expression*: Using the `final_pose` data reported via `geometry msgs/Pose` to calculate the euclidean distance d from the target pose location specified in the mission specification.
 
-```
-d_pose = \sqrt { ( {x_{final_pose}-x_{target_pose}} )^2 + ( {y_{final_pose}-y_{target_pose}})^2 + ( {z_{final_pose}-z_{target_pose}} )^2} 
-``` 
+
+$$d_pose = \sqrt { ( {x_{final_pose}-x_{target_pose}} )^2 + ( {y_{final_pose}-y_{target_pose}})^2 + ( {z_{final_pose}-z_{target_pose}} )^2}$$
+
 
 **Intent Element 2. Pose Accuracy**
 
-*Verdict Expression*: Using the `final_quat` data reported via `geometry msgs/Pose` to calculate the euclidean distance d from the target target_quat location for sample collection at a sample collection point.
+*Verdict Expression*: Using the `final_quat` data reported via `geometry msgs/Pose` to calculate the euclidean distance d from the target `target_quat` location for sample collection at a sample collection point.
 
-`d_quat = \angular-dist(final_quat, target_quat)`
+$$d_quat = \angular-dist(final_quat, target_quat)$$
 
-*Verdict Evaluation*: PASS if d_pose < 2 cm and d_quat < \theta_good , DEGRADED if d_pose < 10 cm and d_quat < \theta_deg, otherwise FAIL.
+*Verdict Evaluation*: `PASS` if $$d_pose < 2$$ cm and $$d_quat < \theta_good $$, `DEGRADED` if $$d_pose < 10$$ cm and $$d_quat < \theta_deg$$, otherwise `FAIL`.
 
 **Intent Element 3. Force Accuracy**
 
 *Verdict Expression*: Using the `max_force` data reported via `TASK_PSP` to calculate the difference between force generated for excavating a particular location compared with the optimal threshold calculated based on math and the arm dynamics and physics.
 
-`d_force = (force_generated - force_optimal) / force_optimal`
+`$$d_force = (force_generated - force_optimal) / force_optimal$$`
 
 *Verdict Evaluation*: `PASS` if `d_force < 0.2`, `DEGRADED` if `0.8 > d_force >= 0.2`, otherwise `FAIL`.
