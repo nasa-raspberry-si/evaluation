@@ -116,7 +116,7 @@ Example of intent specification: For some, it is a mission goal that needed to b
 
 Describe each intent and what methods for evaluating them will be used. Specifically, we will use metrics defined by the testbed provides at NASA JPL and Ames [1]. The defined task level metrics provide qualitative criteria by which to evaluate autonomy technologies developed for an autonomy system onboard an Ocean World lander, in particular as described in JPL’s 2016 Europa Lander Study, and as demonstrated on the NASA JPL OWLAT and NASA Ames OceanWATERS testbeds.
 
-# References
+## References
 
 [1] Mike Dalal, Hari Nayar, 'Evaluation Criteria for Ocean World Lander Autonomy,' (Oct 11, 2021).
 
