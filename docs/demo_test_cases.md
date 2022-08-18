@@ -76,7 +76,7 @@ This document provides the test case specification for the JPL demo. Please refe
 
 	**Expected Behavior:** Mission should succeed. After a fault is injected, the autonomy should detect the fault and stop the arm, then it queries the planner and the new plan is generated at runtime, and finally executes the new plan.
 
- 5. **Challenge Stage C.B.2** 
+5. **Challenge Stage C.B.2** 
 
  	**Description:** Behavioral Fault, Autonomy, Planner synthesizes a new plan at runtime to fix the fault.
 	
@@ -96,6 +96,25 @@ This document provides the test case specification for the JPL demo. Please refe
 	till it finds the correct "z" value or "force_threshold"
 
 	**New Plan (generated at runtime):** the new plan contains the correction of input by adjusting the z values in the coordinate that will be sent to the arm for finding the right `Pose` and `force_threshold` for sample collection. In particular, `ARM_MOVE_CARTESIAN` will be called with the correct inputs for the `z`  value in `pose` coordinate and `ARM_MOVE_CARTESIAN_GUARDED` with a correct input `force_threshold`.
+
+6. **Challenge Stage C.B.3** 
+	
+	**Description:** Fault, Autonomy, Planner synthesizes a new plan at runtime to fix the fault. 
+	
+	**Mission Specification:**
+		
+		```
+		CAM_CAP
+		<<Extract_Loc>>
+		optimal_loc = <<PickOptimalLoc>>
+		ARM_UNSTOW
+		TASK_PSP(optimal_loc)
+		```
+
+	**Fault:** None
+
+	**Expected Behavior:** The arm with the pressure sinkage tool goes to the location and then performs surface interrogation.
+
 
 ## Intent Specification
 
