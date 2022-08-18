@@ -118,9 +118,9 @@ The Autonomy's effectiveness is demonstrated by executing tests. Intent satisfac
 The fidelity of the SUT concerning test outcome $t$ and intent element $e$ is defined to be:
 
 ```math
-Fidelity (e) = \frac
+$$Fidelity (e) = \frac
 {| \left\{ t\ \colon\ t\ \textnormal{is COMPLETE} \cap verdict (e, t) \in \left\{ \textnormal{PASS}, \textnormal{DEGRADED} \right\} \right\} |}
-{| \left\{ t\ \colon\ t\ \textnormal{is COMPLETE} \cap verdict (e, t) \in \left\{ \textnormal{PASS}, \textnormal{DEGRADED}, \textnormal{FAIL} \right\} \right\} |}
+{| \left\{ t\ \colon\ t\ \textnormal{is COMPLETE} \cap verdict (e, t) \in \left\{ \textnormal{PASS}, \textnormal{DEGRADED}, \textnormal{FAIL} \right\} \right\} |}$$
 ```
 
 Note that this definition excludes from the assessment any tests with an outcome of ERROR, INVALID, or INCOMPLETE, and for intent element $e$, any tests that result in a verdict of INAPPLICABLE or INCONCLUSIVE.
@@ -142,9 +142,8 @@ For discussion, assume that we ran a total of 10 tests for the example challenge
 | COMPLETE       | FAIL                               |
 | COMPLETE       | FAIL                               |
 
-```math
-Fidelity (e_{1}) = \frac{4}{6} = 0.66
-```
+
+$$Fidelity (e_{1}) = \frac{4}{6} = 0.66$$
 
 Based on the observed tests the platform was capable of satisfying the mission requirement of navigating to the target location approximately 2/3rds of the time. For challenge problems with more than one intent element, this metric can be used to analyze potential trade-offs the system is making amongst the set.
 
