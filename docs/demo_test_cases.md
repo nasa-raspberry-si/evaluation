@@ -126,7 +126,7 @@ This document provides the test case specification for the JPL demo. Please refe
 
 $$d_{loc} = \sqrt { ( {x_{final-pose} - x_{target-pose}} )^2 + ( {y_{final-pose} - y_{target-pose}})^2 + ( {z_{final-pose} - z_{target-pose}} )^2}$$
 
-*Verdict Evaluation*: `PASS` if $$d_{loc} < 5 cm$$ $$, `DEGRADED` if  $$5 cm < d_{pose} < 20 cm$$, otherwise `FAIL`.
+*Verdict Evaluation*: `PASS` if $d_{loc} < 5 cm$, `DEGRADED` if  $5 cm < d_{pose} < 20 cm$, otherwise `FAIL`.
 
 **Intent Element 2. Pose Accuracy**
 
@@ -134,7 +134,7 @@ $$d_{loc} = \sqrt { ( {x_{final-pose} - x_{target-pose}} )^2 + ( {y_{final-pose}
 
 $$d_{pose} = d_{angular}(final-quat, target-quat)$$
 
-*Verdict Evaluation*: `PASS` if $$d_{pose} < 2$$ $$, `DEGRADED` if  2 < $$d_{pose} < 10$$, otherwise `FAIL`.
+*Verdict Evaluation*: `PASS` if $d_{pose} < 2$, `DEGRADED` if  $2 < d_{pose} < 10$, otherwise `FAIL`.
 
 **Intent Element 3. Force Accuracy**
 
@@ -142,4 +142,4 @@ $$d_{pose} = d_{angular}(final-quat, target-quat)$$
 
 `$$d_{force} = (force_{generated} - force_{optimal}) / force_{optimal}$$`
 
-*Verdict Evaluation*: `PASS` if `d_{force} < 0.2`, `DEGRADED` if `0.8 > d_{force} >= 0.2`, otherwise `FAIL`.
+*Verdict Evaluation*: `PASS` if `$d_{force} < 0.2$`, `DEGRADED` if `$0.8 > d_{force} >= 0.2$`, otherwise `FAIL`.
