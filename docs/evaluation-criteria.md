@@ -118,9 +118,9 @@ The Autonomy's effectiveness is demonstrated by executing tests. Intent satisfac
 The fidelity of the SUT concerning test outcome $t$ and intent element $e$ is defined to be:
 
 
-$$Fidelity (e) = \frac
-{| \left\{ t\ \colon\ t\ \textnormal{is COMPLETE} \cap verdict (e, t) \in \left\{ \textnormal{PASS}, \textnormal{DEGRADED} \right\} \right\} |}
-{| \left\{ t\ \colon\ t\ \textnormal{is COMPLETE} \cap verdict (e, t) \in \left\{ \textnormal{PASS}, \textnormal{DEGRADED}, \textnormal{FAIL} \right\} \right\} |}$$
+$$ fidelity (e) = \frac
+{| \{ t\ \colon\ t\ \textnormal{is COMPLETE} \cap verdict (e, t) \in \{ \textnormal{PASS}, \textnormal{DEGRADED} \} \} |}
+{| \{ t\ \colon t\ \textnormal{is COMPLETE} \cap verdict (e, t) \in \{ \textnormal{PASS}, \textnormal{DEGRADED}, \textnormal{FAIL} \} \} |}$$
 
 Note that this definition excludes from the assessment any tests with an outcome of ERROR, INVALID, or INCOMPLETE, and for intent element $e$, any tests that result in a verdict of INAPPLICABLE or INCONCLUSIVE.
 
