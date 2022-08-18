@@ -14,6 +14,9 @@ This document explains the test and evaluation protocol `RASPBERRY-SI` partially
  
  * Capability 2 (Runtime Adaptation): Adapts the target system to `maintain or recover` as much of its intent as possible. In particular, the Autonomy component enables adaptation to run-time/mission-time uncertainties. e.g., faults, failures, behavior execution error, degradations, or other unexpected behavior in the Europa lander arm or any other subsystem of the space lander.
 
+ * Capability 3 (Verifiability)[^1]: Autonomy should provide mechanisms to provide system-level verification. For example, queries from the Autonomy evaluator, to verify whether the plan generation was aware of the fault injection parameters before test execution. In particular, the autonomy may provide verifications using a combination of static verification (via code analysis) and online dynamic verification (via runtime introspection). 
+
+[^1]: This capability was not promised in the proposal, but we identified it as a critical and important capability for autonomy in mission-critical target systems.  
 
 
 ## RASPBERRY-SI's Autonomy
@@ -45,7 +48,7 @@ In this project, there are three major separate components:
 
 * Integration Testing: Testing interfacing/integration of Autonomy with the Testbeds. 
 
-* Test Execution: Evaluating the performance of Autonomy
+* Test Case Executiona for Evaluation: Evaluating the performance of Autonomy
 
 We use the following tools/data: `rostest`, `unittest` (python), `gtest` (c++), `Logs`, `RQT`, `ROSBag`, `RViz`, `SymPy`
 
@@ -65,7 +68,7 @@ We use the following tools/data: `rostest`, `unittest` (python), `gtest` (c++), 
   * launch file for Autonomy plan execution (`autonomy_exec.launch`)
 * Testing the interface between `autonomy-node` <-> ROS <-> `testbed-node`
 
-We use `rostest` and embed tests within the roslaunch files to verify that they are functioning properly. In particular, we use <test> tags (specifies test nodes) within the launch file.
+We use `rostest` and embed tests within the `roslaunch` files to verify that they are functioning properly. In particular, we use `<test>` tags (specifies test nodes) within the launch file.
 
 ### Integration Testing
 
@@ -106,6 +109,7 @@ The testbed provides the API via the testbed's user guide.
 
 ## Autonomy Evaluation
 
+### Test Case Design
 We evaluate the performance of Autonomy in maintaining the intents by running test cases, specified with the following structure:
 
 - Test Case #1: A name or sentence in English
@@ -122,11 +126,15 @@ We evaluate the performance of Autonomy in maintaining the intents by running te
 
 *Verdict Expression*: Using the `final_pose` data reported via `geometry msgs/Pose` to calculate the euclidean distance d from the target pose location specified in the mission specification.
 
-d_pose = \sqrt { ( {x_{final_pose}-x_{target_pose}} )^2 + ( {y_{final_pose}-y_{target_pose}} )^2 + ( {z_{final_pose}-z_{target_pose}} )^2}  
+```
+d_pose = \sqrt { ( {x_{final_pose}-x_{target_pose}} )^2 + ( {y_{final_pose}-y_{target_pose}} )^2 + ( {z_{final_pose}-z_{target_pose}} )^2}
+```
 
 *Verdict Expression*: Using the `final_quat` data reported via `geometry msgs/Pose` to calculate the euclidean distance d from the target target_quat location for sample collection at a sample collection point.
 
+```
 d_quat = \angular-dist(final_quat, target_quat)
+```
 
 *Verdict Evaluation*: PASS if d_pose < 2 cm and d_quat < \theta_good , DEGRADED if d_pose < 10 cm and d_quat < \theta_deg, otherwise FAIL.
 
@@ -147,20 +155,24 @@ We collect the information about test case execution with the following format.
   - `results:`
     - `intent-element-1: <float> [0 - 1]`
     - `intent-element-2: <float> [0 - 1]`
-    - `any-other-postprocessed-data-item-related-to-performance-of-the-autonomy-during-the-runtime-execution:`
+    - `any-other-post-processed-data-item-related-to-performance-of-the-autonomy-during-the-runtime-execution:`
 
-The information stored in the test case execution files are used by evaluation scripts to determine the outcome of evaluation. In particular, we use the following evaluation procedure for each testbed:
+The information stored in the test case execution files is used by evaluation scripts to determine the outcome of the evaluation. In particular, we use the following evaluation procedure for each testbed:
 
-* `OceanWATERS`: evaluation are done by an automated procedure: 
+* `OceanWATERS`: the evaluation is done by an automated procedure. The evaluation procedure includes:  
   * `instantiation of the experimental environment:` The Autonomy and a simulator are automatically instantiated and deployed in their deployment nodes. 
   * `perturbations:` The fault injection component is instantiated and faults are injected using an automated procedure using configuration files and scripts. 
   * `score:` the human evaluator runs scripts to calculate `verdict-expression` over the `trials`.
 
 
-* `owlat-sim`: similar to `OceanWATERS``owlat-physical`: evaluations are done primarily manually with humans deriving the test execution. The evaluation procedure includes: 
-  * `instantiation of the experimental environment:` The Autonomy and the Physical Testbed are instantiated and deployed in their deployment nodes. 
-  * `perturbations:` The fault injection component is instantiated and faults are injected with a manual or automated procedure using configuration files and scripts. 
+* `owlat-sim`: similar to `OceanWATERS`
+
+* `owlat-physical`: the evaluations are done primarily manually with humans deriving the test execution. The evaluation procedure includes: 
+  * `instantiation of the experimental environment (semi-automated):` The Autonomy and the Physical Testbed are instantiated and deployed in their deployment nodes. 
+  * `perturbations (manual to have control, but hidden from Autonomy):` The fault injection component is instantiated and faults are injected with a manual or automated procedure using configuration files and scripts. 
   * `score:` the human evaluator runs scripts to calculate `verdict-expression` over `trials`.
+
+
 
 
 # Test Execution 
