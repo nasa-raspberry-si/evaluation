@@ -2,66 +2,88 @@
 
 ## Overview
 
-Provide a short description of the challenge problem, which describe the challenge problem scenario and the key mission goals and technology employed to support this challenge problem.
+Provide a short description of the challenge problem, which describes the challenge problem scenario and the key mission goals and technology employed to support the challenge problem.
 
 The following questions should be thought about and addressed somewhere in this document.
 
-* Describe the mission scenario of where Autonomy (`RASPBERRY-SI` solution or any other solutions developed by the team involved in the `ARROW/COLDTECH` programs) and the `OceanWATERS/OWLAT testbeds` (we will call them and the System Under Test--SUT--from now on).
+* Describe the mission scenario of  Autonomy (`RASPBERRY-SI` solution or any other solutions developed by the team involved in the `ARROW/COLDTECH` programs) and the `OceanWATERS/OWLAT testbeds` (we will use the target system interchangeably).
 
 * Please provide more detail about the Autonomy.
 
-* What will this challenge problem focus on demonstrating?
+* What will the challenge problem focus on demonstrating?
 
-* What are the key technologies/enablers for this challenge problem (e.g., online machine learning and assurance monitors will be present to allow the system to adapt to unforseen situastions).
+* What are the key technologies/enablers for the challenge problem (e.g., online machine learning and assurance monitors will be present to allow the system to adapt to unforeseen situations)?
 
 * How would success be measured?
 
+### Test Design
+
+For specifying each test case, we use the following structure:
+
+- Test Case #1: A name or sentence in English
+- A `mission-specification` (`mission-spec.PLEXIL`)
+- Intent Elements:
+    - `intent-element-1`: A `intent-description` in English about the expected behavior from the target system and an `intent-formula` that determines the extent to which the target system maintained the expected behavior, by precisely measuring `deviations from the specified intent` (`intent-element-1-sympy-formula.txt`). 
+    - `intent-element-2`: A `description` in English and a `formula` that determines the extent to which the target system is successfully maintaining intent as defined in the description of `intent-element-2` (`intent-element-2-sympy-formula.txt`). 
+    - `intent-element-3`: A `description` in English and a `formula` that determines the extent to which the target system is successfully maintaining intent as defined in the description of `intent-element-1` (`intent-element-3-sympy-formula.txt`). 
+- Test Data: `test-data`: [`data-items`]
+- Test Configuration: `test-config`:[`any-other-test-level-configuration-options`]: Any information that may be required to run the test. For example, the time and the frequency of the faults injected into the target system. 
+
 ## Test Data
 
-Describe any specific data that will be used or need to be generated to test the challenge problem. An example of this from our BRASS DARPA program where we were part of it. Specifically, one team, CRA, use of weather station data as a proxy for actual underwater vehicle sensor data.
+Describe any specific data that will be used or need to be generated to test the challenge problem. For example, we use the `owlat-sim` and collect data for our machine learning models, e.g., the causal model that we train and use in the plan generation at runtime.
 
 If the challenge problem will not need any specific data sets to be present or generated we should provide a short note stating such.
 
-## Test Parameters
+## Test Configuration Parameters
 
-Describe the different parameters (we called it knobs!) that will be explored in the evaluation. These parameters represent the input state-space of ecosystem changes presented to the system under test. We should be as specific as possible to the types and values for each parameter. The following table format can be used to describe the parameters of the system under test.
+Describe the different parameters (we called them knobs!) that will be explored in the evaluation. These parameters represent the input space of perturbations. We should be as specific as possible to the types and values for each parameter. The following table format can be used to describe the parameters of the system under test.
 
 | Name           | Value                        | Description  |
 | -------------- | ---------------------------- | ------------ |
 | BatteryVoltage | Integer in `range(104, 165)` | Change the robot battery voltage – value can be changed prior to or during test runtime. |
-| HasSensor      | Boolean                      | If True a new sensor is available for the vehicle to measure X aiding in its navigation. This value will be set prior to test. |
+| CameraCaliberated     | Boolean                      | True if the camera on the testbed can be perturbed by miscalibrating it at runtime. |
+
 
 ## Test Procedure
 
-Describe how the Test Harness (We currently do this manually, but this can be partially or fully automated) will interact with the Challenge Problem (i.e., Autonomy) and SUT. It is expected that there will be more dynamic engagement at runtime between the test harness and SuT as the designs become more complex. This may include changes to the underlying ecosystem but also the ability of the test harness to monitor critical aspects of the system.
+Describe how the Test Harness (We currently do this manually, but this can be partially or fully automated) will interact with the Autonomy and the Testbeds. It is expected that there will be more dynamic engagement at runtime between the test harness and Autonomy as the designs become more complex. This may include changes to the underlying target system but also the ability of the test harness to monitor critical aspects of the target system.
 
-Explain if there is any deviation from the testing strategy (Baseline A, Baseline B, Challenge Stage). Describe what it means to test the challenge problem in each of those stages (i.e. Baseline A will choose settings for knobs A and C, B will always be set to its default value – Baseline B and the Challenge Stage use the same knob settings for A and C chosen in Baseline A. In addition, a new setting for knob B will be presented to Baseline B and Challenge Stage).
+Explain the test stages (`Baseline A`, `Baseline B`, `Challenge Stage(s)`). Describe what it means to test the challenge problem in each of those stages: 
 
-Baseline A – Description
+- Baseline A will choose settings for knobs A and C, and B will always be set to its default value.
 
-Baseline B – Description
+- Baseline B and the Challenge Stage use the same knob settings for A and C chosen in Baseline A. 
 
-Challenge Stage – Description
+- In addition, a new setting for knob B will be presented to Baseline B and Challenge Stage.
 
-We provide specific details and describe any testing strategies that should be followed. For example, you may want to define a number of test cases where a certain subset of the input state-space is explored while holding others constant.
+  * Baseline A – Description
+
+  * Baseline B – Description
+
+  * Challenge Stage(s) – Description
+
+We provide specific details and describe any testing strategies that should be followed. For example, you may want to define several test cases where a certain subset of the input space is explored while holding others constant.
 
 ## Interface to the Test Harness (API)
 
-Based on the Test Procedure described above and what the API would look like to support the interaction between Autonomy and SuT testbeds. This should include parameters to initialize the system and those which will change at runtime through calls into the SuT.
+Based on the Test Procedure described above and what the API would look like to support the interaction between Autonomy and Testbed. This should include parameters to initialize the system and those which will change at runtime through calls into the Testbed.
 
-The [CMU MARS team Phase 1 wiki page](https://wikis.mit.edu/confluence/display/BRASS/CMU+MARS+Phase+1+Challenge+Problem+Announcement) provides a good example of defining these calls (example table below).
 
 ```javascript
-// Interface for test harness to observe the state of the robot
-GET http://brass-ta/action/observe
+// Interface for test harness to observe the state of the lander
+GET http://ta/action/observe
 TEST_ACTION:
   {"TIME" : TIME_ENCODING, "ARGUMENTS" : {}}
    ACTION_RESULT:
    {"TIME" : TIME_ENCODING,
     "RESULT" : {"x" : Float,
                 "y" : Float,
-                "w" : Float,
-                "v" : Float,
+                "z" : Float,
+                "qw" : Float,
+                "qx" : Float,
+                "qy" : Float,
+                "qz" : Float,
                 "voltage" : batteryLevel,
                 "deadline" : Integer,
                 "sim_time" : Integer
@@ -70,8 +92,8 @@ TEST_ACTION:
 ```
 
 ```javascript
-// API to set up the initial conditions for the robot voltage level
-POST http://brass-ta/action/set_battery
+// API to set up the initial conditions for the lander voltage level
+POST http://ta/action/set_battery
 TEST_ACTION:
   {"TIME" : TIME_ENCODING,
   "ARGUMENTS" : {"voltage" : batteryLevel}
@@ -88,8 +110,19 @@ An interaction diagram like the following would also be helpful in our discussio
 
 ## Intent Specification and Evaluation Metrics
 
-Describe if there is a new process for discovering/specifying intent of the challenge problem. How will the challenge problem allow us to measure intent preservation?
+Describe the intents of the system in the challenge problem. How will the challenge problem allow us to measure intent preservation?
 
-Example of intent specification: For some, it is a mission goal which needed to be satisfied (e.g. the samples from `n` number of points were collected – comparison with metris such as time to finish the sample collection, the energy consumption, the number of faults that were faced and resolved at runtime, the number of faults that could not be resolved, and any other metrics in the evaluation criteria in `Evaluation Criteria for Ocean World Lander Autonomy`). In other words, the evaluation results quantitatively compare how well the adaptive system performed relative to a non-adaptive baseline.
+Example of intent specification: For some, it is a mission goal that needed to be satisfied (e.g. the samples from `n` number of points were collected – comparison with metrics such as time to finish the sample collection, the energy consumption, the number of faults that were faced and resolved at runtime, the number of faults that could not be resolved, and any other metrics in the [Autonomy evaluation criteria](./evaluation-criteria) as well as the task-level metrics defined by NASA [1]. In other words, the evaluation results quantitatively compare how well the adaptive system performed relative to a non-adaptive baseline.
 
-Describe each intent and what methods for evaluating them will be used. Specifically, we will use metrics defined by NASA JPL and Ames--`Evaluation Criteria for Ocean World Lander Autonomy` by `Mike Dalal, Hari Nayar, and the other members of OceanWATERS and OWLAT testbeds teams` that provides qualitative criteria by which to evaluate autonomy technologies developed for an autonomy system onboard an Ocean World lander, in particular as described in JPL’s 2016 Europa Lander Study, and as demonstrated on the NASA JPL OWLAT and NASA Ames OceanWATERS testbeds. We focus on criteria relevant to the modeling capabilities of either or both testbeds.
+Describe each intent and what methods for evaluating them will be used. Specifically, we will use metrics defined by the testbed provides at NASA JPL and Ames [1]. The defined task level metrics provide qualitative criteria by which to evaluate autonomy technologies developed for an autonomy system onboard an Ocean World lander, in particular as described in JPL’s 2016 Europa Lander Study, and as demonstrated on the NASA JPL OWLAT and NASA Ames OceanWATERS testbeds.
+
+# References
+
+[1] Mike Dalal, Hari Nayar, 'Evaluation Criteria for Ocean World Lander Autonomy,' (Oct 11, 2021).
+
+[2] NASA JPL, Ocean World Lander Autonomy Testbed (OWLAT), 
+[URL](https://www-robotics.jpl.nasa.gov/how-we-do-it/systems/ocean-world-lander-autonomy-testbed-owlat/) 
+
+[3] NASA Ames, Ocean Worlds Autonomy Testbed for Exploration Research & Simulation (OceanWATERS), [URL](https://github.com/nasa/ow_simulator). 
+
+[4] [RASPBERRY-SI project website](https://nasa-raspberry-si.github.io/raspberry-si/)

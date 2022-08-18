@@ -3,7 +3,7 @@
 version: 1.0
 
 
-This document explains the test and evaluation protocol `RASPBERRY-SI` partially followed prior to and during the visit to JPL in August 2022, and will fully follow after the visit for evaluating the Autonomy when interfaced with NASA JPL OWLAT (physical testbed) and NASA Ames OceanWATERS (virtual testbed). The challenges that the `RASPBERRY-SI` team faced for testing and evaluating Autonomy with the physical testbed during the visit to JPL in August 2022 provided the required info for following rigorous integration tests and defining test specifications prior to evaluation.
+This document explains the test and evaluation protocol `RASPBERRY-SI` partially followed before and during the visit to JPL in August 2022, and will fully follow after the visit for evaluating the Autonomy when interfaced with NASA JPL OWLAT (physical testbed) and NASA Ames OceanWATERS (virtual testbed). The challenges that the `RASPBERRY-SI` team faced for testing and evaluating Autonomy with the physical testbed during the visit to JPL in August 2022 provided the required info for following rigorous integration tests and defining test specifications prior to evaluation.
 
 
 ## Overview
@@ -16,7 +16,7 @@ This document explains the test and evaluation protocol `RASPBERRY-SI` partially
 
  * Capability 3 (Verifiability)[^1]: Autonomy should provide mechanisms to provide system-level verification. For example, queries from the Autonomy evaluator, to verify whether the plan generation was aware of the fault injection parameters before test execution. In particular, the autonomy may provide verifications using a combination of static verification (via code analysis) and online dynamic verification (via runtime introspection). 
 
-[^1]: This capability was not promised in the proposal, but we identified it as a critical and important capability for autonomy in mission-critical target systems.  
+[^1]: This capability was not promised in the proposal, but we identified it as a critical capability for autonomy in mission-critical target systems.  
 
 
 ## RASPBERRY-SI's Autonomy
@@ -48,7 +48,7 @@ In this project, there are three major separate components:
 
 * Integration Testing: Testing interfacing/integration of Autonomy with the Testbeds. 
 
-* Test Case Executiona for Evaluation: Evaluating the performance of Autonomy
+* Test Case Execution for Evaluation: Evaluating the performance of Autonomy
 
 We use the following tools/data: `rostest`, `unittest` (python), `gtest` (c++), `Logs`, `RQT`, `ROSBag`, `RViz`, `SymPy`
 
@@ -120,28 +120,9 @@ We evaluate the performance of Autonomy in maintaining the intents by running te
     - `intent-element-3`: A `description` in English and a `formula` that determines the extent to which the target system is successfully maintaining intent as defined in the description of `intent-element-1` (`intent-element-3-sympy-formula.txt`). 
 - Test configuration: `test-config`:[`any-other-test-level-configuration-options`]: Any information that may be required to run the test. For example, the time and the frequency of the faults injected into the target system. 
 
-**Example: Intent Element 1. Accuracy**
+We will use the [autonomy evaluation criteria](./evaluation-criteria.md) and the task-specific evaluation criteria provided by NASA [1] to formulate the intent expression in terms of symbolic formula.
 
-*Description*: Lander arm successfully navigates to a target location (specified in the mission specification) with an appropriate pose for sample collection.
-
-*Verdict Expression*: Using the `final_pose` data reported via `geometry msgs/Pose` to calculate the euclidean distance d from the target pose location specified in the mission specification.
-
-```
-d_pose = \sqrt { ( {x_{final_pose}-x_{target_pose}} )^2 + ( {y_{final_pose}-y_{target_pose}} )^2 + ( {z_{final_pose}-z_{target_pose}} )^2}
-```
-
-*Verdict Expression*: Using the `final_quat` data reported via `geometry msgs/Pose` to calculate the euclidean distance d from the target target_quat location for sample collection at a sample collection point.
-
-```
-d_quat = \angular-dist(final_quat, target_quat)
-```
-
-*Verdict Evaluation*: PASS if d_pose < 2 cm and d_quat < \theta_good , DEGRADED if d_pose < 10 cm and d_quat < \theta_deg, otherwise FAIL.
-
-
-We will use the evaluation criteria provided by NASA [1] to formulate the intent expression in terms of symbolic formula.
-
-We collect the information about test case execution with the following format.
+We collect the information about test case execution in the following format.
 
 - `test-id` (`test-UID.yaml`)
   - `test-trial-id:` 
@@ -174,8 +155,7 @@ The information stored in the test case execution files is used by evaluation sc
 
 
 
-
-# Test Execution 
+## Test Execution 
 
 We perform the following steps for each test case execution:
 
@@ -218,12 +198,12 @@ The final stage represents an adaptive target system operating in a perturbed ec
 * Stage C.B (Challenge Stage - Runtime): A synthesized adaptation plan starts a PLEXIL plan, randomly injects the fault, the autonomy detects the fault, and the prism synthesizes an optimal plan at runtime concerning objectives of the mission (energy consumption, time)  that is going to fix the fault, translate the prism plan to PLEXIL plan and execute the PLEXIL plan.
 
 * Stage C.C (Challenge Stage - Causality + Runtime): synthesized adaptation plan by querying the causal model
-start a PLEXIL plan, randomly inject the fault, the autonomy detects the fault, the prism synthesizes an optimal plan at runtime with respect to objectives of the mission (energy consumption, time)  that is going to fix the fault, translate the prism plan to PLEXIL plan and execute the PLEXIL plan
+start a PLEXIL plan, randomly inject the fault, the autonomy detects the fault, the prism synthesizes an optimal plan at runtime concerning objectives of the mission (energy consumption, time)  that is going to fix the fault, translate the prism plan to PLEXIL plan and execute the PLEXIL plan.
 
 *It is expected that the intended functionality or a degraded functionality is preserved. The efficiency of planning at these different stages is different. For the same fault, the time that it takes to generate a plan is expected to _be ordered as `C.A < C.C < C.b`.*
 
 
-# Verdict and Test Outcome
+## Verdict and Test Outcome
 
 The verdict represents the determination of whether the target system achieves an element of its intent in the context of a specific configuration and execution of the target system. That is, a verdict is calculated for each intent element after each test stage.
 
@@ -313,13 +293,14 @@ For more specific examples, please refer to the [demo test cases](./demo-test-ca
 > The system that is being evaluated is the Autonomy component.  
 This deserves to be stated since many tests of fidelity will actually interact with the testbeds in either unadaptive (testbed without using autonomy) or adaptive (testbed + autonomy), appearing superficially to be a test of that system. Nevertheless, the goal of all testing will be to gather information about the effectiveness of the Autonomy.
 
-**Testbed**
+**Target System (Testbed)**
 
-> The [OWLAT](https://www-robotics.jpl.nasa.gov/how-we-do-it/systems/ocean-world-lander-autonomy-testbed-owlat/) and [OceanWATERS](https://github.com/nasa/ow_simulator) testbeds. 
+> [OWLAT](https://www-robotics.jpl.nasa.gov/how-we-do-it/systems/ocean-world-lander-autonomy-testbed-owlat/) 
+> [OceanWATERS](https://github.com/nasa/ow_simulator)
 
-**Autonomy + Testbed**
+**Autonomy (mode) + Testbed**
 
-> 
+> We use different modes of our Autonomy for comparing with the baselines and comparing the developed capabilities.
 
 **Intent**
 

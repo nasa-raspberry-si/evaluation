@@ -73,7 +73,7 @@ This document provides the test case specification for the JPL demo. Please refe
 
 	**Fault:** A fault (ARM_GOAL_ERROR) is injected randomly while performing the mission through `axclient`.
 
-	**Expected Behavior:** Mission should succeed. After a fault is injected, the autonomy should detect the fault and stop the arm, then it queries the PRISM planner and the new plan is generated at runtime, and finally executes the new plan.
+	**Expected Behavior:** Mission should succeed. After a fault is injected, the autonomy should detect the fault and stop the arm, then it queries the planner and the new plan is generated at runtime, and finally executes the new plan.
 
  5. **Challenge Stage C.B2** 
 
@@ -87,7 +87,7 @@ This document provides the test case specification for the JPL demo. Please refe
 		ARM_MOVE_CARTESIAN_GUARDED (retracting=True)
 		TASK_SCOOP```
 
-	**Fault:** We inject a different fault class, which we call a behavioral fault. Intentionally injecting a behavioral fault, by setting a wrong `z` coordinate value as the goal for the `ARM_MOVE_CARTESIAN`. The action that will trigger a fault, is because the surface is not reachable by the ARM for scooping and this produce a behavioral fault, e.g., due to measurement noise, the goal target was determined incorrectly.
+	**Fault:** We inject a different fault class, which we call a behavioral fault. Intentionally injecting a behavioral fault, by setting a wrong `z` coordinate value as the goal for the `ARM_MOVE_CARTESIAN`. The action that will trigger a fault, is because the surface is not reachable by the ARM for scooping and this produces a behavioral fault, e.g., due to measurement noise, the goal target was determined incorrectly.
 	
 	**Expected Behavior:** Mission should be a success. After a fault is injected the autonomy should detect the fault and stop the arm, then it queries the PRISM 	planner and the new plan is generated at runtime and finally executes the new plan. 
 	till it finds the correct "z" value or "force_threshold"
@@ -103,21 +103,21 @@ This document provides the test case specification for the JPL demo. Please refe
 *Verdict Expression*: Using the `final_pose` data reported via `geometry msgs/Pose` to calculate the euclidean distance d from the target pose location specified in the mission specification.
 
 
-$$d_pose = \sqrt { ( {x_{final_pose}-x_{target_pose}} )^2 + ( {y_{final_pose}-y_{target_pose}})^2 + ( {z_{final_pose}-z_{target_pose}} )^2}$$
+$$d_{loc} = \sqrt { ( {x_{final-pose} - x_{target-pose}} )^2 + ( {y_{final-pose} - y_{target-pose}})^2 + ( {z_{final-pose} - z_{target-pose}} )^2}$$
 
 
 **Intent Element 2. Pose Accuracy**
 
 *Verdict Expression*: Using the `final_quat` data reported via `geometry msgs/Pose` to calculate the euclidean distance d from the target `target_quat` location for sample collection at a sample collection point.
 
-$$d_quat = \angular-dist(final_quat, target_quat)$$
+$$d_{pose} = d_{angular}(final-quat, target-quat)$$
 
-*Verdict Evaluation*: `PASS` if $$d_pose < 2$$ cm and $$d_quat < \theta_good $$, `DEGRADED` if $$d_pose < 10$$ cm and $$d_quat < \theta_deg$$, otherwise `FAIL`.
+*Verdict Evaluation*: `PASS` if $$d_{pose} < 2$$ $$, `DEGRADED` if  2 < $$d_{pose} < 10$$, otherwise `FAIL`.
 
 **Intent Element 3. Force Accuracy**
 
 *Verdict Expression*: Using the `max_force` data reported via `TASK_PSP` to calculate the difference between force generated for excavating a particular location compared with the optimal threshold calculated based on math and the arm dynamics and physics.
 
-`$$d_force = (force_generated - force_optimal) / force_optimal$$`
+`$$d_{force} = (force-generated - force-optimal) / force-optimal$$`
 
-*Verdict Evaluation*: `PASS` if `d_force < 0.2`, `DEGRADED` if `0.8 > d_force >= 0.2`, otherwise `FAIL`.
+*Verdict Evaluation*: `PASS` if `d_{force} < 0.2`, `DEGRADED` if `0.8 > d_{force} >= 0.2`, otherwise `FAIL`.
