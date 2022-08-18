@@ -29,4 +29,12 @@ $d_{pose} = d_{angular}(final-quat, target-quat)$
 
 `$d_{force} = (force-generated - force-optimal) / force-optimal$`
 
-*Verdict Evaluation*: `PASS` if `$d_{force} < 0.2$`, `DEGRADED` if `$0.8 > d_{force} >= 0.2$`, otherwise `FAIL`.
+*Verdict Evaluation*: `PASS` if $d_{force} < 0.2$, `DEGRADED` if $0.8 > d_{force} >= 0.2$, otherwise `FAIL`.
+
+### Intent Element 4. Force Accuracy
+
+*Verdict Expression*: Using the `max_force` data reported via `TASK_PSP` to calculate the difference between force generated for excavating a particular location compared with the optimal threshold calculated based on math and the arm dynamics and physics.
+
+`$d_{force} = (force-generated - force-optimal) / force-optimal$`
+
+*Verdict Evaluation*: `PASS` if $d_{force} < 0.2$, `DEGRADED` if $0.8 > d_{force} >= 0.2$, otherwise `FAIL`.
