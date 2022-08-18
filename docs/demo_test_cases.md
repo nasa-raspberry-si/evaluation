@@ -38,7 +38,7 @@ This document provides the test case specification for the JPL demo. Please refe
 		TASK_SCOOP
 		```
 
-	**Fault:** A fault (ARM_GOAL_ERROR) is injected randomly while performing the mission through the `axclient` utility.
+	**Fault:** A fault (`ARM_GOAL_ERROR`) is injected randomly while performing the mission through the `axclient` utility.
 
 	**Expected Behavior:** Mission should not succeed. The arm could not continue with the rest of the actions when a fault was received by the testbed. In other words, the mission should not be able to maintain the intent. 	
 
@@ -55,7 +55,7 @@ This document provides the test case specification for the JPL demo. Please refe
 		TASK_SCOOP
 		```
 	
-	**Fault:** A fault (ARM_GOAL_ERROR) is injected randomly while performing the mission through the `axclient` utility.
+	**Fault:** A fault (`ARM_GOAL_ERROR`) is injected randomly while performing the mission through the `axclient` utility.
 
 	**Expected Behavior:** Mission should succeed. After a fault is injected the autonomy should detect the fault and use the design-time specified fixes (cleaning the injected fault) and finish the mission.	
 	
@@ -72,7 +72,7 @@ This document provides the test case specification for the JPL demo. Please refe
 		TASK_SCOOP
 		```
 
-	**Fault:** A fault (ARM_GOAL_ERROR) is injected randomly while performing the mission through the `axclient` utility.
+	**Fault:** A fault (`ARM_GOAL_ERROR`) is injected randomly while performing the mission through the `axclient` utility.
 
 	**Expected Behavior:** Mission should succeed. After a fault is injected, the autonomy should detect the fault and stop the arm, then it queries the planner and the new plan is generated at runtime, and finally executes the new plan.
 
@@ -82,11 +82,13 @@ This document provides the test case specification for the JPL demo. Please refe
 	
 	**Mission Specification:**
 		
-		```ARM_UNSTOW
+		```
+		ARM_UNSTOW
 		ARM_MOVE_CARTESIAN // intentionally setting a wrong z coordinate value that will trigger a fault, surface not reachable
 		ARM_MOVE_CARTESIAN_GUARDED
 		ARM_MOVE_CARTESIAN_GUARDED (retracting=True)
-		TASK_SCOOP```
+		TASK_SCOOP
+		```
 
 	**Fault:** We inject a different fault class, which we call a behavioral fault. Intentionally injecting a behavioral fault, by setting a wrong `z` coordinate value as the goal for the `ARM_MOVE_CARTESIAN`. The action that will trigger a fault, is because the surface is not reachable by the ARM for scooping and this produces a behavioral fault, e.g., due to measurement noise, the goal target was determined incorrectly.
 	
