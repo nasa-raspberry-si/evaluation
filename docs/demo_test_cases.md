@@ -2,13 +2,15 @@
 
 This document provides the test case specification for the JPL demo. Please refer to the [test and evaluation protocol](./evaluation-protocol.md) for more explanation about the test stages and the template for test case specification.
 
+## Test Scenarios
+
 * Mission Description: Reach a location to excavate and scoop one sample from that location.
 
-* Test Stages:
+* List of Test Scenarios
 
 1. **Baseline A** 
 
-	**Description:** No fault, no Autonomy
+	**Description:** No fault, No Autonomy
 
 	**Mission Specification:**
 		
@@ -25,7 +27,7 @@ This document provides the test case specification for the JPL demo. Please refe
 
 2. **Baseline B**
 	
-	**Description:** Fault, no Autonomy
+	**Description:** Fault, No Autonomy
 
 	**Mission Specification:**
 		
@@ -36,14 +38,13 @@ This document provides the test case specification for the JPL demo. Please refe
 		TASK_SCOOP
 		```
 
-	**Fault:** A fault (ARM_GOAL_ERROR) is injected randomly while performing the mission through `axclient`.
+	**Fault:** A fault (ARM_GOAL_ERROR) is injected randomly while performing the mission through the `axclient` utility.
 
-	**Expected Behavior:** Mission should not succeed. In other words, the mission should not be able to maintain the intent. 
-	Observed Behavior: The arm could not continue with the rest of the actions when a fault was received by the testbed.	
+	**Expected Behavior:** Mission should not succeed. The arm could not continue with the rest of the actions when a fault was received by the testbed. In other words, the mission should not be able to maintain the intent. 	
 
 3. **Challenge Stage C.A** 
 
-	**Description:** Fault, Autonomy, Planner Knows All Fixes for possible Faults
+	**Description:** Fault, Autonomy, Planner Knows All Fixes for the Faults.
 	
 	**Mission Specification:**
 		
@@ -54,13 +55,13 @@ This document provides the test case specification for the JPL demo. Please refe
 		TASK_SCOOP
 		```
 	
-	**Fault:** A fault (ARM_GOAL_ERROR) is injected randomly while performing the mission through `axclient`.
+	**Fault:** A fault (ARM_GOAL_ERROR) is injected randomly while performing the mission through the `axclient` utility.
 
 	**Expected Behavior:** Mission should succeed. After a fault is injected the autonomy should detect the fault and use the design-time specified fixes (cleaning the injected fault) and finish the mission.	
 	
-4. **Challenge Stage C.B1** 
+4. **Challenge Stage C.B.1** 
 	
-	**Description:** Fault, Autonomy, Planner Does not the fixes; Planner synthesize a new plan at runtime to fix the fault.
+	**Description:** Fault, Autonomy, Planner synthesizes a new plan at runtime to fix the fault. 
 	
 	**Mission Specification:**
 		
@@ -71,13 +72,13 @@ This document provides the test case specification for the JPL demo. Please refe
 		TASK_SCOOP
 		```
 
-	**Fault:** A fault (ARM_GOAL_ERROR) is injected randomly while performing the mission through `axclient`.
+	**Fault:** A fault (ARM_GOAL_ERROR) is injected randomly while performing the mission through the `axclient` utility.
 
 	**Expected Behavior:** Mission should succeed. After a fault is injected, the autonomy should detect the fault and stop the arm, then it queries the planner and the new plan is generated at runtime, and finally executes the new plan.
 
- 5. **Challenge Stage C.B2** 
+ 5. **Challenge Stage C.B.2** 
 
- 	**Description:** Behavioral Fault, Autonomy, Planner Does not the fixes; Planner synthesize a new plan at runtime to fix the fault
+ 	**Description:** Behavioral Fault, Autonomy, Planner synthesizes a new plan at runtime to fix the fault.
 	
 	**Mission Specification:**
 		
@@ -94,7 +95,7 @@ This document provides the test case specification for the JPL demo. Please refe
 
 	**New Plan (generated at runtime):** the new plan contains the correction of input by adjusting the z values in the coordinate that will be sent to the arm for finding the right `Pose` and `force_threshold` for sample collection. In particular, `ARM_MOVE_CARTESIAN` will be called with the correct inputs for the `z`  value in `pose` coordinate and `ARM_MOVE_CARTESIAN_GUARDED` with a correct input `force_threshold`.
 
-* Intent Specification:
+## Intent Specification
 
 **Intent Element 1. Location Accuracy**
 
@@ -102,9 +103,9 @@ This document provides the test case specification for the JPL demo. Please refe
 
 *Verdict Expression*: Using the `final_pose` data reported via `geometry msgs/Pose` to calculate the euclidean distance d from the target pose location specified in the mission specification.
 
-
 $$d_{loc} = \sqrt { ( {x_{final-pose} - x_{target-pose}} )^2 + ( {y_{final-pose} - y_{target-pose}})^2 + ( {z_{final-pose} - z_{target-pose}} )^2}$$
 
+*Verdict Evaluation*: `PASS` if $$d_{loc} < 5 cm$$ $$, `DEGRADED` if  $$5 cm < d_{pose} < 20 cm$$, otherwise `FAIL`.
 
 **Intent Element 2. Pose Accuracy**
 
@@ -118,6 +119,6 @@ $$d_{pose} = d_{angular}(final-quat, target-quat)$$
 
 *Verdict Expression*: Using the `max_force` data reported via `TASK_PSP` to calculate the difference between force generated for excavating a particular location compared with the optimal threshold calculated based on math and the arm dynamics and physics.
 
-`$$d_{force} = (force-generated - force-optimal) / force-optimal$$`
+`$$d_{force} = (force_{generated} - force_{optimal}) / force_{optimal}$$`
 
 *Verdict Evaluation*: `PASS` if `d_{force} < 0.2`, `DEGRADED` if `0.8 > d_{force} >= 0.2`, otherwise `FAIL`.

@@ -118,9 +118,9 @@ We evaluate the performance of Autonomy in maintaining the intents by running te
     - `intent-element-1`: A `intent-description` in English about the expected behavior from the target system and an `intent-formula` that determines the extent to which the target system maintained the expected behavior, by precisely measuring `deviations from the specified intent` (`intent-element-1-sympy-formula.txt`). 
     - `intent-element-2`: A `description` in English and a `formula` that determines the extent to which the target system is successfully maintaining intent as defined in the description of `intent-element-2` (`intent-element-2-sympy-formula.txt`). 
     - `intent-element-3`: A `description` in English and a `formula` that determines the extent to which the target system is successfully maintaining intent as defined in the description of `intent-element-1` (`intent-element-3-sympy-formula.txt`). 
-- Test configuration: `test-config`:[`any-other-test-level-configuration-options`]: Any information that may be required to run the test. For example, the time and the frequency of the faults injected into the target system. 
+- Test configuration: `test-config`:[`any-other-test-level-configuration-options`]: The list of configuration parameters as information that may be required to run the test. For example, the time and the frequency of the faults injected into the target system. 
 
-We will use the [autonomy evaluation criteria](./evaluation-criteria.md) and the task-specific evaluation criteria provided by NASA [1] to formulate the intent expression in terms of symbolic formula.
+We will use the [autonomy evaluation criteria](./evaluation_criteria.md) and the task-specific evaluation criteria provided by NASA [1] to formulate the intent expression in terms of symbolic formula.
 
 We collect the information about test case execution in the following format.
 
@@ -184,7 +184,7 @@ The first stage represents the unadaptive target system operating in an unpertur
 
 **Baseline B Stage**
 
-The second stage represents the unadaptive target system operating in a perturbed ecosystem (the perturbation may have been present at the start of the test or it may have been applied during test execution). This stage is used to confirm that the perturbation to the ecosystem actually threatens the target system's ability to achieve its intent. The expectation for this stage is that the test result is consistent with a failure to fully satisfy one or more applicable intent elements (a verdict of `FAIL` or `DEGRADED`). If not, it is impossible to know whether Autonomy has made any difference in the adaptability of the target system if it could have succeeded by simply doing nothing. Note that a perturbation for a particular test may not affect the satisfaction of every intent element. 
+The second stage represents the unadaptive target system operating in a perturbed ecosystem (the perturbation may have been present at the start of the test or it may have been applied during test execution). This stage is used to confirm that the perturbation to the ecosystem threatens the target system's ability to achieve its intent. The expectation for this stage is that the test result is consistent with a failure to fully satisfy one or more applicable intent elements (a verdict of `FAIL` or `DEGRADED`). If not, it is impossible to know whether Autonomy has made any difference in the adaptability of the target system if it could have succeeded by simply doing nothing. Note that a perturbation for a particular test may not affect the satisfaction of every intent element. 
 
 *All that is required of this stage is that some reduction in intended functionality was observed as a result of the perturbation. Recurring intent satisfactions in the Baseline B Stage could indicate that the range of perturbations allowed by the challenge problem definition is too narrow.*
 
@@ -269,7 +269,7 @@ Some conditions occurred during test execution that precluded continuation of th
 
 If any stage of a test yields an error condition, the test outcome is `ERROR`. All test results for other stages will be ignored.
 
-For more specific examples, please refer to the [demo test cases](./demo-test-cases.md) that involve test specifications for each test stage.
+For more specific examples, please refer to the [demo test cases](./demo_test_cases.md) that involve test specifications for each test stage.
 
 # References
 
@@ -298,9 +298,9 @@ This deserves to be stated since many tests of fidelity will actually interact w
 > [OWLAT](https://www-robotics.jpl.nasa.gov/how-we-do-it/systems/ocean-world-lander-autonomy-testbed-owlat/) 
 > [OceanWATERS](https://github.com/nasa/ow_simulator)
 
-**Autonomy (mode) + Testbed**
+**Ecosystem: Autonomy + Testbed + Environment**
 
-> We use different modes of our Autonomy for comparing with the baselines and comparing the developed capabilities.
+> We call the target system operating in an uncertain environment with the Autonomy providing the capability to adapt the system. 
 
 **Intent**
 
