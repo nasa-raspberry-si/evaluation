@@ -12,7 +12,7 @@ This document explains the test and evaluation protocol `RASPBERRY-SI` partially
 
  * Capability 1 (Root-cause Analysis): Analyze and monitors the target system in operation to detect `root causes` of failures, faults, or any perturbations that affect the target system’s ability to realize its intent. 
  
- * Capability 2 (Runtime Adaptation): Adapts the target system to `maintain or recover` as much of its intent as possible. In particular, the Autonomy component enables adaptation to run-time/mission-time uncertainties. e.g., faults, failures, behavior execution error, degradations, or other unexpected behavior in the Europa lander arm or any other subsystem of the space lander.
+ * Capability 2 (Runtime Adaptation): Adapts the target system to `maintain or recover` as much of its intent as possible. In particular, the Autonomy component enables adaptation to run-time (mission-time) uncertainties. e.g., faults, failures, behavior execution errors, degradations, or other unexpected behavior in the Europa lander arm or any other subsystem of the space lander.
 
  * Capability 3 (Verifiability)[^1]: Autonomy should provide mechanisms to provide system-level verification. For example, queries from the Autonomy evaluator, to verify whether the plan generation was aware of the fault injection parameters before test execution. In particular, the autonomy may provide verifications using a combination of static verification (via code analysis) and online dynamic verification (via runtime introspection). 
 
@@ -23,7 +23,7 @@ This document explains the test and evaluation protocol `RASPBERRY-SI` partially
 
 In this section, we only describe the implementation view of the Autonomy component and we leave out the technical details of the methods implemented for each component.
 
-The `RASPBERRY-SI-Autonomy` (`Autonomy` from hereafter) implements a reference framework in autonomous and adaptive systems, called `MAPE-K`, originally developed by IBM and has been extended by several members of `RASPBERRY-SI` team extensively over the past decade. The components of  our Autonomy include: 
+The `RASPBERRY-SI-Autonomy` (`Autonomy` from hereafter) implements a reference framework in autonomous and adaptive systems, called `MAPE-K`, originally developed by IBM and has been extended by several members of the `RASPBERRY-SI` team extensively over the past decade. The components of  our Autonomy include: 
 
 * `M: <autonomy-monitor>`: The monitoring component obtains the telemetry data and stores the data in `K: <autonomy-knowledge`>` with the appropriate format.
 * `A: <autonomy-analyze>`: The analysis component detects any anomaly in the target system and perturbations in its environment that require adaptation to the target system. The analysis component does so using the live and historical monitoring data.
