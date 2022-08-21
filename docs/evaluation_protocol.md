@@ -40,7 +40,7 @@ In this project, there are three major separate components:
   * [Ocean World Lander Autonomy Testbed (OWLAT)](https://www-robotics.jpl.nasa.gov/how-we-do-it/systems/ocean-world-lander-autonomy-testbed-owlat/):  
     * OWLAT Hardware Platform (`owlat-physical`): The testbed comprises a base, an instrument arm, and perception sensors (camera). It provides the hardware interfaces and low-level software infrastructure to allow various autonomy solutions to command typical lander operations and receive telemetry and performance feedback through a ROS-based software interface in a plug-and-play manner [2]. 
     * OWLAT Control Software Simulation (`owlat-sim`): This software provides a partial simulation of the OWLAT hardware platform via Dynamics and Real-Time Simulation (DARTS). The simulation currently only includes limited aspects of the system. In particular, a subset of the robotic arm commands via ROS actions. 
-  * [Ocean Worlds Autonomy Testbed for Exploration Research & Simulation (`OceanWATERS`)](https://github.com/nasa/ow_simulator) [3]: This software-based simulator emulates surface environmental conditions (e.g., lighting and surface material properties), robotic manipulator operation, and high-level lander systems. The simulator provides system introspection capabilities. 
+  * [Ocean Worlds Autonomy Testbed for Exploration Research & Simulation (`OceanWATERS` or  `ow_simulator`)](https://github.com/nasa/ow_simulator) [3]: This software-based simulator emulates surface environmental conditions (e.g., lighting and surface material properties), robotic manipulator operation, and high-level lander systems. The simulator provides system introspection capabilities. 
 
 ## Test Process
 
